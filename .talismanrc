@@ -3,3 +3,9 @@ fileignoreconfig:
   checksum: 718b33cc7f6135e70c95805b079f9122e04321f598ca576f20186a1bad274e36
 - filename: scripts/test_deployment.sh
   checksum: d27bec4ba2b457de4045a468a7594c9f8c209a799e684f9d2afb1072303666ee
+- filename: src/test/java/com/booking/users/ChangePasswordServiceTest.java
+  checksum: adb285cb6062cfe4eaab9e46e7810422e90bb5b23034c8c055b3d65726b4b788
+- filename: src/main/java/com/booking/users/ChangePasswordService.java
+  checksum: f2a8c2588388e1e7e106f47c52503d77d56729f891b20355e37dd0e84dfca46d
+- filename: src/main/java/com/booking/users/view/model/ChangePasswordRequest.java
+  checksum: 9fa4777eac5287c96d680fe460408318e8cc6884af861afd9c833f7b61b37a58
