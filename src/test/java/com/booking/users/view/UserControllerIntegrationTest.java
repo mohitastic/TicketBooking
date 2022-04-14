@@ -1,8 +1,8 @@
 package com.booking.users.view;
 
 import com.booking.App;
-import com.booking.users.User;
-import com.booking.users.UserRepository;
+import com.booking.users.repository.model.User;
+import com.booking.users.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

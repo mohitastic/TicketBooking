@@ -1,4 +1,4 @@
-package com.booking.users;
+package com.booking.users.view;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
