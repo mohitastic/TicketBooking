@@ -5,6 +5,7 @@ import com.booking.movieGateway.exceptions.FormatException;
 import com.booking.movieGateway.models.Movie;
 import com.booking.shows.respository.Show;
 import com.booking.shows.respository.ShowRepository;
+import com.booking.shows.view.models.ShowRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,10 @@ public class ShowService {
 
     public Movie getMovieById(String movieId) throws IOException, FormatException {
         return movieGateway.getMovieFromId(movieId);
+    }
+
+    public void addShow(ShowRequest request) {
+        Show show = new Show(request.getDate(), request.getSlot(), request.getCost(), request.getMovieId());
+        showRepository.save(show);
     }
 }
