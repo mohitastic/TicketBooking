@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Time;
+import java.util.Objects;
 
 @Entity
 @Table(name = "slot")
@@ -55,5 +56,18 @@ public class Slot {
 
     public Time getStartTime() {
         return startTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Slot slot = (Slot) o;
+        return Objects.equals(id, slot.id) && Objects.equals(name, slot.name) && Objects.equals(startTime, slot.startTime) && Objects.equals(endTime, slot.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, startTime, endTime);
     }
 }

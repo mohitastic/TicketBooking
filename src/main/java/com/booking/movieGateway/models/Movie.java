@@ -54,8 +54,7 @@ public class Movie {
         return id.equals(movie.id) &&
                 name.equals(movie.name) &&
                 duration.equals(movie.duration) &&
-                plot.equals(movie.plot) &&
-                imdbRating.equals(movie.imdbRating);
+                plot.equals(movie.plot);
     }
 
     @Override
