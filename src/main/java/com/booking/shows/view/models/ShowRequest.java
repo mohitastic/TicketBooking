@@ -14,20 +14,21 @@ public class ShowRequest {
     @JsonProperty
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @ApiModelProperty(name = "date", value = "Date of booking (yyyy-MM-dd)", dataType = "java.lang.String", required = true, example = "2020-01-01", position = 1)
-    private final Date date;
+    private  Date date;
 
     @JsonProperty
     @ApiModelProperty(name = "slot", value = "slot", required = true, position = 2)
-    private final Slot slot;
+    private  Slot slot;
 
     @JsonProperty
     @DecimalMin(value = "0.0", inclusive = false, message = "Cost should be greater than {value}")
     @Digits(integer = 4, fraction = 2, message = "Cost can have at most {integer} integral digits, and {fraction} fractional digits")
-    private final BigDecimal cost;
+    @ApiModelProperty(name = "cost", value = "cost of movie", required = true, position = 3)
+    private  BigDecimal cost;
 
     @JsonProperty
-    @ApiModelProperty(name = "movieId", value = "The movie id", dataType = "java.lang.String", required = true, position = 3)
-    private final String movieId;
+    @ApiModelProperty(name = "movie id", value = "The movie id", required = true, position = 4)
+    private  String movieId;
 
     public Date getDate() {
         return date;
@@ -45,10 +46,15 @@ public class ShowRequest {
         return movieId;
     }
 
+    public ShowRequest() {
+    }
+
     public ShowRequest(Date date, Slot slot, BigDecimal cost, String movieId) {
         this.date = date;
         this.slot = slot;
         this.cost = cost;
         this.movieId = movieId;
     }
+
 }
+

@@ -40,13 +40,12 @@ public class DefaultMovieGateway implements MovieGateway {
         final var request = requestBuilder.url(appConfig.getMovieServiceHost() + "movies/" + id).build();
         final var response = httpClient.newCall(request).execute();
         final var jsonResponse = requireNonNull(response.body()).string();
-        // System.out.println(objectMapper.readValue(jsonResponse, MovieServiceResponse.class));
         return objectMapper.readValue(jsonResponse, MovieServiceResponse.class).toMovie();
     }
 
     @Override
     public List<Movie> getAllMovies() throws IOException {
-        final var request = requestBuilder.url(appConfig.getMovieServiceHost() + "movies/").build();
+        final var request = requestBuilder.url(appConfig.getMovieServiceHost() + "movies").build();
         final var response = httpClient.newCall(request).execute();
         final var jsonResponse = requireNonNull(response.body()).string();
 
