@@ -13,3 +13,15 @@ fileignoreconfig:
   checksum: cb5fab6ab866e3de185912d09e4e48f18a327d60cfc06b19462e4f5616fc139e
 - filename: src/test/java/com/booking/users/view/UserControllerIntegrationTest.java
   checksum: 1e8671d1428a4670e72ce102cafade9086665a84324be8e6ffa4b03c18009d56
+- filename: src/test/java/com/booking/bookings/view/BookingControllerIntegrationTest.java
+  checksum: ed10ad5893a414d550d31dd7df1ca6fc0e41e5e96d1def2263f7af6af341e497
+- filename: src/test/java/com/booking/movieGateway/DefaultMovieGatewayTest.java
+  checksum: 38a249f88b3eb697a0bcdaafb4648322f9e7c4496a7eb0fde8db4689479253ba
+- filename: src/test/java/com/booking/shows/view/ShowControllerIntegrationTest.java
+  checksum: b098459acf80f549590136550d6f72ae90b9621917db9df9af81e31c308b9c5f
+- filename: src/main/java/com/booking/movieGateway/models/Movie.java
+  checksum: 9020a6f3fd5822018de3ed34a0bab6319314590b10641bca62b6a49bad637478
+- filename: src/test/java/com/booking/movieGateway/models/MovieServiceResponseTest.java
+  checksum: a0374142c576f375ba83c3a9373da82360fc6f51eed37c71cc877a4d56c12270
+
+
