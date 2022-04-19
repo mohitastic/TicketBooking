@@ -1,5 +1,6 @@
 package com.booking.slot;
 
+import com.booking.movieGateway.MovieGateway;
 import com.booking.shows.ShowService;
 import com.booking.shows.respository.Show;
 import com.booking.slots.repository.Slot;
@@ -25,7 +26,8 @@ class SlotServiceTest {
     void shouldNotReturnTheSlotsWhichAreAlreadyBooked() {
         ShowService showService = Mockito.mock(ShowService.class);
         SlotRepository slotRepository = Mockito.mock(SlotRepository.class);
-        SlotService slotService = new SlotService(slotRepository, showService);
+        MovieGateway movieGateway = Mockito.mock(MovieGateway.class);
+        SlotService slotService = new SlotService(slotRepository, showService,movieGateway);
         Date date = Date.valueOf("2022-04-16");
         List<Show> shows = new ArrayList<>();
         Slot slotOne = new Slot("slot1", Time.valueOf("09:00:00"), Time.valueOf("12:30:00"));
