@@ -9,3 +9,7 @@ fileignoreconfig:
   checksum: f2a8c2588388e1e7e106f47c52503d77d56729f891b20355e37dd0e84dfca46d
 - filename: src/main/java/com/booking/users/view/model/ChangePasswordRequest.java
   checksum: 9fa4777eac5287c96d680fe460408318e8cc6884af861afd9c833f7b61b37a58
+- filename: src/main/java/com/booking/users/view/UserController.java
+  checksum: cb5fab6ab866e3de185912d09e4e48f18a327d60cfc06b19462e4f5616fc139e
+- filename: src/test/java/com/booking/users/view/UserControllerIntegrationTest.java
+  checksum: 1e8671d1428a4670e72ce102cafade9086665a84324be8e6ffa4b03c18009d56

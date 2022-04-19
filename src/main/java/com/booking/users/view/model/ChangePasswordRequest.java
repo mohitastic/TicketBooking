@@ -38,4 +38,7 @@ public class ChangePasswordRequest {
     public String getConfirmNewPassword() {
         return confirmNewPassword;
     }
+
+    public ChangePasswordRequest() {
+    }
 }

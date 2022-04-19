@@ -1,5 +1,6 @@
 package com.booking.handlers;
 
+import com.booking.exceptions.ChangePasswordException;
 import com.booking.exceptions.EnumValidationException;
 import com.booking.handlers.models.ErrorResponse;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
@@ -57,6 +58,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             add(e.getMessage());
         }});
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ChangePasswordException.class)
+    public ResponseEntity<ErrorResponse> handleChangePasswordException(ChangePasswordException e) {
+        ErrorResponse error = new ErrorResponse("Bad Request", new ArrayList<>() {{
+            add(e.getMessage());
+        }});
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
