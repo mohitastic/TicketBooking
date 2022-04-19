@@ -13,3 +13,7 @@ fileignoreconfig:
   checksum: cb5fab6ab866e3de185912d09e4e48f18a327d60cfc06b19462e4f5616fc139e
 - filename: src/test/java/com/booking/users/view/UserControllerIntegrationTest.java
   checksum: 1e8671d1428a4670e72ce102cafade9086665a84324be8e6ffa4b03c18009d56
+- filename: src/main/java/com/booking/users/UserSignUpService.java
+  checksum: 4fa4e44f9d7d0368a435f826ef7b9d13f22c5f063d6ce0fcb217563dd000ca75
+- filename: src/main/java/com/booking/users/view/model/UserSignUpRequest.java
+  checksum: 3fa1eb8b9d2b0724bdb8e818dd85c1a1662dcaa4d0cd26deabd34fbe34238995
