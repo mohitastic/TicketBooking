@@ -67,7 +67,9 @@ public class ShowControllerIntegrationTest {
                                 "movie_1",
                                 "Movie name",
                                 Duration.ofHours(1).plusMinutes(30),
-                                "Movie plot"
+                                "Movie plot",
+                                "https://m.media-amazon.com/images/M/MV5BMjI0MDMzNTQ0M15BMl5BanBnXkFtZTgwMTM5NzM3NDM@._V1_SX300.jpg",
+                                "6.3"
                         )
                 );
         final Slot slotOne = slotRepository.save(new Slot("Test slot one", Time.valueOf("09:30:00"), Time.valueOf("12:00:00")));
@@ -81,10 +83,10 @@ public class ShowControllerIntegrationTest {
                 .andExpect(content().json(
                         "[" +
                                 "{'id':" + showOne.getId() + ",'date':'2020-01-01','cost':249.99," +
-                                "'slot':{'id':" + slotOne.getId() + ",'name':'Test slot one','startTime':'9:30 AM','endTime':'12:00 PM'}," +
+                                "'slot':{'id':" + slotOne.getId() + ",'name':'Test slot one','startTime':'9:30 am','endTime':'12:00 pm'}," +
                                 "'movie':{'id':'movie_1','name':'Movie name','duration':'1h 30m','plot':'Movie plot'}}," +
                                 "{'id':" + showTwo.getId() + ",'date':'2020-01-01','cost':299.99," +
-                                "'slot':{'id':" + slotTwo.getId() + ",'name':'Test slot two','startTime':'1:30 PM','endTime':'4:00 PM'}," +
+                                "'slot':{'id':" + slotTwo.getId() + ",'name':'Test slot two','startTime':'1:30 pm','endTime':'4:00 pm'}," +
                                 "'movie':{'id':'movie_1','name':'Movie name','duration':'1h 30m','plot':'Movie plot'}}" +
                                 "]"));
     }
