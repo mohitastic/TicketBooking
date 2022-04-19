@@ -83,10 +83,10 @@ public class ShowControllerIntegrationTest {
                 .andExpect(content().json(
                         "[" +
                                 "{'id':" + showOne.getId() + ",'date':'2020-01-01','cost':249.99," +
-                                "'slot':{'id':" + slotOne.getId() + ",'name':'Test slot one','startTime':'9:30 am','endTime':'12:00 pm'}," +
+                                "'slot':{'id':" + slotOne.getId() + ",'name':'Test slot one','startTime':'9:30 AM','endTime':'12:00 PM'}," +
                                 "'movie':{'id':'movie_1','name':'Movie name','duration':'1h 30m','plot':'Movie plot'}}," +
                                 "{'id':" + showTwo.getId() + ",'date':'2020-01-01','cost':299.99," +
-                                "'slot':{'id':" + slotTwo.getId() + ",'name':'Test slot two','startTime':'1:30 pm','endTime':'4:00 pm'}," +
+                                "'slot':{'id':" + slotTwo.getId() + ",'name':'Test slot two','startTime':'1:30 PM','endTime':'4:00 PM'}," +
                                 "'movie':{'id':'movie_1','name':'Movie name','duration':'1h 30m','plot':'Movie plot'}}" +
                                 "]"));
     }

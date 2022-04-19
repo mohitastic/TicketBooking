@@ -24,7 +24,7 @@ class TimeStringConverterTest {
 
         String actualSerializedString = timeStringConverter.convert(time);
 
-        String expectedSerializedString = "6:30 am";
+        String expectedSerializedString = "6:30 AM";
         assertThat(actualSerializedString, is(equalTo(expectedSerializedString)));
     }
 
@@ -34,7 +34,7 @@ class TimeStringConverterTest {
 
         String actualSerializedString = timeStringConverter.convert(time);
 
-        String expectedSerializedString = "4:45 pm";
+        String expectedSerializedString = "4:45 PM";
         assertThat(actualSerializedString, is(equalTo(expectedSerializedString)));
     }
 }
