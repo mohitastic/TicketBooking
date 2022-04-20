@@ -1,21 +1,28 @@
 package com.booking.users;
 
 import com.booking.exceptions.*;
+import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
+import com.booking.users.repository.model.UserDetails;
 import com.booking.users.view.model.UserSignUpRequest;
+import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+@Service
 public class UserSignUpService {
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
     private static final String PHONE_NUMBER_PATTERN = "\\d{10}";
     private static final String EMAIL_ADDRESS_PATTERN = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     private UserRepository userRepository;
-    public UserSignUpService(UserRepository userRepository) {
+    private UserDetailsRepository userDetailsRepository;
+    public UserSignUpService(UserRepository userRepository, UserDetailsRepository userDetailsRepository) {
         this.userRepository = userRepository;
+        this.userDetailsRepository = userDetailsRepository;
     }
 
     public void execute(UserSignUpRequest userSignUpRequest) throws UserSignUpException {
@@ -25,6 +32,7 @@ public class UserSignUpService {
         String phoneNumber = userSignUpRequest.getPhoneNumber();
         String password = userSignUpRequest.getPassword();
         String confirmPassword = userSignUpRequest.getConfirmPassword();
+        Date dob = userSignUpRequest.getDob();
 
         fieldNotEmptyCheck(name, username, email, phoneNumber, password, confirmPassword);
 
@@ -38,6 +46,9 @@ public class UserSignUpService {
 
         Optional<User> user = userRepository.findByUsername(username);
         userAlreadyExists(user);
+
+        User savedUser = userRepository.save(new User(username, password));
+        userDetailsRepository.save(new UserDetails(name, dob, email, phoneNumber, savedUser));
     }
 
 

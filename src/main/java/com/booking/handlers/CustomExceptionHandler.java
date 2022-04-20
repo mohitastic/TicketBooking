@@ -2,6 +2,7 @@ package com.booking.handlers;
 
 import com.booking.exceptions.ChangePasswordException;
 import com.booking.exceptions.EnumValidationException;
+import com.booking.exceptions.UserSignUpException;
 import com.booking.handlers.models.ErrorResponse;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import org.jetbrains.annotations.NotNull;
@@ -68,8 +69,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserSignUpException.class)
+    public ResponseEntity<ErrorResponse> handleUserSignUpException(UserSignUpException e) {
+        ErrorResponse error = new ErrorResponse("Bad Request", new ArrayList<>() {{
+            add(e.getMessage());
+        }});
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAnyException() {
+    public ResponseEntity<ErrorResponse> handleAnyException(Exception e) {
+        System.out.println("Error: "+e.getMessage());
         ErrorResponse error = new ErrorResponse("Something went wrong", emptyDetails);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
