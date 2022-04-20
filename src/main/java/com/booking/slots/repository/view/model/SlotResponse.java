@@ -20,12 +20,7 @@ public class SlotResponse {
     @ApiModelProperty(required = true, position = 5)
     private final List<Slot> slots;
 
-    @JsonProperty
-    @ApiModelProperty(required = true, position = 5)
-    private final List<Movie> movies;
-
-    public SlotResponse(List<Movie> movies, List<Slot> slots) {
-        this.movies = movies;
+    public SlotResponse(List<Slot> slots) {
         this.slots = slots;
     }
 }
