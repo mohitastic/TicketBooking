@@ -29,6 +29,9 @@ fileignoreconfig:
   checksum: 4fa4e44f9d7d0368a435f826ef7b9d13f22c5f063d6ce0fcb217563dd000ca75
 - filename: src/main/resources/db/migration/V1.10__CreateUserDetailsTable.sql
   checksum: 8da0a3ccdb2fafd4cf4597d867851f72257d0686409d6c3f37228b1c1cf2f46a
+- filename: src/test/java/com/booking/users/view/UserSignUpControllerIntegrationTest.java
+  checksum: 2a3f6c3bffd9295dafa549b96147f041a2edda9f875d4302a9da8ad684508dae
+
 
 
 
