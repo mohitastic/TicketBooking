@@ -26,7 +26,7 @@ public class SlotService {
 
     public List<Slot> getByAvailability(Date date) throws SlotException {
         if (isPastDate(date)) {
-            throw new SlotException("Past dates not allowed");
+            throw new SlotException("Past date not allowed");
         }
 
         List<Slot> slots = slotRepository.findAll();
@@ -36,17 +36,21 @@ public class SlotService {
             slots.remove(show.getSlot());
         }
 
-        return slots
+        return isFutureDate(date) ? slots : slots
                 .stream()
                 .filter(this::futureSlots)
                 .collect(Collectors.toList());
+    }
+
+    private boolean futureSlots(Slot slot) {
+        return slot.getStartTime().compareTo(Time.valueOf(LocalTime.now())) >= 0;
     }
 
     private boolean isPastDate(Date date) {
         return date.compareTo(Date.valueOf(LocalDate.now())) < 0;
     }
 
-    private boolean futureSlots(Slot slot) {
-        return slot.getStartTime().compareTo(Time.valueOf(LocalTime.now())) >= 0;
+    private boolean isFutureDate(Date date) {
+        return date.compareTo(Date.valueOf(LocalDate.now())) > 0;
     }
 }
