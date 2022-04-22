@@ -14,7 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -46,11 +48,19 @@ public class SlotControllerIntegrationTest {
     void shouldReturnAllAvailableSlots() throws Exception {
         final Slot slotOne = slotRepository.save(new Slot("slot1", Time.valueOf("09:00:00"), Time.valueOf("12:30:00")));
         final Slot slotTwo = slotRepository.save(new Slot("slot2", Time.valueOf("13:30:00"), Time.valueOf("17:00:00")));
+        Date date = Date.valueOf(LocalDate.now().plusDays(1));
 
-        mockMvc.perform(get("/slots?date=2022-08-01"))
+        mockMvc.perform(get("/slots?date=" + date))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "{\"slots\":[{\"id\":" + slotOne.getId() + ",\"name\":\"slot1\",\"startTime\":\"9:00 AM\",\"endTime\":\"12:30 PM\"}," +
                                 "{\"id\":" + slotTwo.getId() + ",\"name\":\"slot2\",\"startTime\":\"1:30 PM\",\"endTime\":\"5:00 PM\"}]}"));
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenPastDateIsGiven() throws Exception {
+        mockMvc.perform(get("/slots?date=2022-04-21"))
+                .andExpect(status().isBadRequest());
+
     }
 }

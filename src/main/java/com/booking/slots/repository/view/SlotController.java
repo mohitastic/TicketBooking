@@ -34,6 +34,7 @@ public class SlotController {
     @ResponseStatus(code = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Fetched available slots successfully"),
+            @ApiResponse(code = 400, message = "Server cannot process request due to client error", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
     })
     public SlotResponse availableSlots(@Valid @RequestParam(name = "date") Date date) throws SlotException {
