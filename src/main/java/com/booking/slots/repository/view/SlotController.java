@@ -1,5 +1,6 @@
 package com.booking.slots.repository.view;
 
+import com.booking.exceptions.SlotException;
 import com.booking.handlers.models.ErrorResponse;
 import com.booking.slots.repository.Slot;
 import com.booking.slots.repository.SlotService;
@@ -35,7 +36,7 @@ public class SlotController {
             @ApiResponse(code = 200, message = "Fetched available slots successfully"),
             @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
     })
-    public SlotResponse availableSlots(@Valid @RequestParam(name = "date") Date date) {
+    public SlotResponse availableSlots(@Valid @RequestParam(name = "date") Date date) throws SlotException {
         List<Slot> availableSlots = slotService.getByAvailability(date);
         return new SlotResponse(availableSlots);
     }
