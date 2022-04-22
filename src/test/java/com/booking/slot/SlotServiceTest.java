@@ -47,35 +47,39 @@ class SlotServiceTest {
 
     @Test
     void shouldReturnAllAvailableSlotsForGivenDate() throws SlotException {
-        ShowService showService = Mockito.mock(ShowService.class);
-        SlotService slotService = new SlotService(mockSlotRepository, showService);
+        ShowService mockShowService = Mockito.mock(ShowService.class);
         Date date = Date.valueOf(LocalDate.now());
         Slot slotOne = new Slot("slot1", Time.valueOf("09:00:00"), Time.valueOf("12:30:00"));
         Slot slotTwo = new Slot("slot2", Time.valueOf("13:30:00"), Time.valueOf("17:30:00"));
-        Slot slotThree = new Slot("slot3", Time.valueOf(LocalTime.now().plusHours(2)), Time.valueOf(LocalTime.now().plusHours(5)));
+        Slot slotThree = new Slot("slot3", Time.valueOf(LocalTime.now().minusHours(3)), Time.valueOf(LocalTime.now()));
+        Slot slotFour = new Slot("slot4", Time.valueOf(LocalTime.now().plusHours(2)), Time.valueOf(LocalTime.now().plusHours(5)));
         List<Slot> slots = new ArrayList<>();
         slots.add(slotOne);
         slots.add(slotTwo);
         slots.add(slotThree);
+        slots.add(slotFour);
+
         List<Show> shows = new ArrayList<>();
         shows.add(new Show(
                 date,
                 slotOne,
                 new BigDecimal("299.99"),
                 "movie_1"));
-
         shows.add(new Show(
                 date,
                 slotTwo,
                 new BigDecimal("299.99"),
                 "movie_2"));
         List<Slot> expectedSlots = new ArrayList<>();
-        expectedSlots.add(slotThree);
-        when(showService.fetchAll(date)).thenReturn(shows);
+        expectedSlots.add(slotFour);
+        when(mockShowService.fetchAll(date)).thenReturn(shows);
         when(mockSlotRepository.findAll()).thenReturn(slots);
 
+        SlotService slotService = new SlotService(mockSlotRepository, mockShowService);
         List<Slot> availableSlots = slotService.getByAvailability(date);
 
         assertThat(availableSlots, is(equalTo(expectedSlots)));
+        Mockito.verify(mockShowService).fetchAll(date);
+        Mockito.verify(mockSlotRepository).findAll();
     }
 }

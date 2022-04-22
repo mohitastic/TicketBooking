@@ -25,18 +25,28 @@ public class SlotService {
     }
 
     public List<Slot> getByAvailability(Date date) throws SlotException {
-
-        if (date.compareTo(Date.valueOf(LocalDate.now())) < 0) {
+        if (isPastDate(date)) {
             throw new SlotException("Past dates not allowed");
         }
 
-        List<Slot> availableSlots = slotRepository.findAll();
+        List<Slot> slots = slotRepository.findAll();
         List<Show> shows = showService.fetchAll(date);
 
         for (Show show : shows) {
-            availableSlots.remove(show.getSlot());
+            slots.remove(show.getSlot());
         }
 
-        return availableSlots.stream().filter(slot -> slot.getStartTime().compareTo(Time.valueOf(LocalTime.now())) >= 0).collect(Collectors.toList());
+        return slots
+                .stream()
+                .filter(this::futureSlots)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isPastDate(Date date) {
+        return date.compareTo(Date.valueOf(LocalDate.now())) < 0;
+    }
+
+    private boolean futureSlots(Slot slot) {
+        return slot.getStartTime().compareTo(Time.valueOf(LocalTime.now())) >= 0;
     }
 }
