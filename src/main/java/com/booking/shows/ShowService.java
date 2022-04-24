@@ -10,6 +10,7 @@ import com.booking.shows.view.models.ShowRequest;
 import com.booking.slots.repository.Slot;
 import com.booking.slots.repository.SlotService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class ShowService {
     private final SlotService slotService;
 
     @Autowired
-    public ShowService(ShowRepository showRepository, MovieGateway movieGateway, SlotService slotService) {
+    public ShowService(ShowRepository showRepository, MovieGateway movieGateway, @Lazy SlotService slotService) {
         this.showRepository = showRepository;
         this.movieGateway = movieGateway;
         this.slotService = slotService;
