@@ -1,5 +1,6 @@
 package com.booking.shows;
 
+import com.booking.exceptions.ShowException;
 import com.booking.movieGateway.MovieGateway;
 import com.booking.movieGateway.exceptions.FormatException;
 import com.booking.movieGateway.models.Movie;
@@ -19,6 +20,8 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class ShowServiceTest {
@@ -67,14 +70,26 @@ public class ShowServiceTest {
     }
 
     @Test
-    void should_be_able_to_add_new_show() {
+    void should_be_able_to_add_new_show() throws ShowException {
         Slot slotOne = new Slot();
-        Date date = Date.valueOf("2020-01-01");
+        Date date = Date.valueOf("2022-04-25");
         ShowService showService = new ShowService(showRepository, movieGateway);
         ShowRequest showRequest = new ShowRequest(date, slotOne, new BigDecimal("299.99"), "movie_1");
 
         showService.addShow(showRequest);
 
         verify(showRepository).save(new Show(showRequest.getDate(), showRequest.getSlot(), showRequest.getCost(), showRequest.getMovieId()));
+    }
+
+    @Test
+    void should_Throw_An_Exception_When_Try_To_Add_Past_Show() {
+        Slot slotOne = new Slot();
+        Date date = Date.valueOf("2020-01-01");
+        ShowService showService = new ShowService(showRepository, movieGateway);
+        ShowRequest showRequest = new ShowRequest(date, slotOne, new BigDecimal("299.99"), "movie_1");
+        String expected = "400 : Past date not allowed";
+
+        ShowException showException = assertThrows(ShowException.class, () -> showService.addShow(showRequest));
+        assertEquals(expected, showException.getMessage());
     }
 }

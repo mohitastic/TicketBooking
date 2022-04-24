@@ -1,5 +1,6 @@
 package com.booking.shows.view;
 
+import com.booking.exceptions.ShowException;
 import com.booking.handlers.models.ErrorResponse;
 import com.booking.movieGateway.exceptions.FormatException;
 import com.booking.movieGateway.models.Movie;
@@ -56,7 +57,7 @@ public class ShowController {
             @ApiResponse(code = 400, message = "Server cannot process request due to client error", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
     })
-    public void add(@RequestBody ShowRequest showRequest) {
+    public void add(@RequestBody ShowRequest showRequest) throws ShowException {
         showService.addShow(showRequest);
     }
 

@@ -1,5 +1,6 @@
 package com.booking.shows;
 
+import com.booking.exceptions.ShowException;
 import com.booking.movieGateway.MovieGateway;
 import com.booking.movieGateway.exceptions.FormatException;
 import com.booking.movieGateway.models.Movie;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -32,7 +34,9 @@ public class ShowService {
         return movieGateway.getMovieFromId(movieId);
     }
 
-    public void addShow(ShowRequest request) {
+    public void addShow(ShowRequest request) throws ShowException {
+        if(request.getDate().compareTo(Date.valueOf(LocalDate.now())) < 0)
+            throw new ShowException("400 : Past date not allowed");
         Show show = new Show(request.getDate(), request.getSlot(), request.getCost(), request.getMovieId());
         showRepository.save(show);
     }

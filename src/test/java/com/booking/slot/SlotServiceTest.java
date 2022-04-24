@@ -52,7 +52,7 @@ class SlotServiceTest {
         Slot slotOne = new Slot("slot1", Time.valueOf("09:00:00"), Time.valueOf("12:30:00"));
         Slot slotTwo = new Slot("slot2", Time.valueOf("13:30:00"), Time.valueOf("17:30:00"));
         Slot slotThree = new Slot("slot3", Time.valueOf(LocalTime.now().minusHours(3)), Time.valueOf(LocalTime.now()));
-        Slot slotFour = new Slot("slot4", Time.valueOf(LocalTime.now().plusHours(2)), Time.valueOf(LocalTime.now().plusHours(5)));
+        Slot slotFour = new Slot("slot4", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(10)));
         List<Slot> slots = new ArrayList<>();
         slots.add(slotOne);
         slots.add(slotTwo);
