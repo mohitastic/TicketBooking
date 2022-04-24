@@ -23,8 +23,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class SlotServiceTest {
     private SlotRepository mockSlotRepository;
@@ -32,6 +31,16 @@ class SlotServiceTest {
     @BeforeEach
     public void beforeEach() {
         mockSlotRepository = mock(SlotRepository.class);
+    }
+
+    @Test
+    public void shouldReturnSlotByItsId() {
+        Slot slotOne = new Slot("slot1", Time.valueOf("09:00:00"), Time.valueOf("12:30:00"));
+        when(mockSlotRepository.getById(1)).thenReturn(slotOne);
+
+        mockSlotRepository.getById(1);
+
+        verify(mockSlotRepository).getById(1);
     }
 
     @Test

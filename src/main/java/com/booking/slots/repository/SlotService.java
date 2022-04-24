@@ -24,6 +24,10 @@ public class SlotService {
         this.slotRepository = slotRepository;
     }
 
+    public Slot getSlotById(int slotId){
+        return slotRepository.getById(slotId);
+    }
+
     public List<Slot> getByAvailability(Date date) throws SlotException {
         if (isPastDate(date)) {
             throw new SlotException("Past date not allowed");
