@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -39,7 +41,7 @@ public class ShowService {
     }
 
     public void addShow(ShowRequest request) throws ShowException, IOException, FormatException {
-        if (request.getDate().compareTo(Date.valueOf(LocalDate.now())) < 0)
+        if (isPastDate(request.getDate()))
             throw new ShowException("400 : Past date not allowed");
 
         if (movieGateway.getMovieFromId(request.getMovieId()) == null)
@@ -47,11 +49,26 @@ public class ShowService {
 
         Slot slot = slotService.getSlotById(request.getSlotId());
 
-        if(slot == null){
+        if (slot == null) {
             throw new ShowException("404 : Slot Id does not exist");
         }
 
+        if (isCurrentDate(request.getDate()) && !futureSlots(slot))
+            throw new ShowException("400 : Past slot not allowed");
+
         Show show = new Show(request.getDate(), slot, request.getCost(), request.getMovieId());
         showRepository.save(show);
+    }
+
+    private boolean futureSlots(Slot slot) {
+        return slot.getStartTime().compareTo(Time.valueOf(LocalTime.now())) >= 0;
+    }
+
+    private boolean isPastDate(Date date) {
+        return date.compareTo(Date.valueOf(LocalDate.now())) < 0;
+    }
+
+    private boolean isCurrentDate(Date date) {
+        return date.compareTo(Date.valueOf(LocalDate.now())) == 0;
     }
 }

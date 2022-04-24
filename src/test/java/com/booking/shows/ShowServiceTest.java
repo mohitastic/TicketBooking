@@ -15,8 +15,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +118,21 @@ public class ShowServiceTest {
         Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         when(movieGateway.getMovieFromId("movie_1")).thenReturn(movie);
         String expected = "404 : Slot Id does not exist";
+
+        ShowException showException = assertThrows(ShowException.class, () -> showService.addShow(showRequest));
+        assertEquals(expected, showException.getMessage());
+    }
+
+    @Test
+    void should_Throw_An_Exception_When_Try_To_Add_Show_With_Past_Slot() throws IOException, FormatException {
+        Date date = Date.valueOf(LocalDate.now());
+        ShowService showService = new ShowService(showRepository, movieGateway, slotService);
+        ShowRequest showRequest = new ShowRequest(date, 1, new BigDecimal("299.99"), "movie_1");
+        Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
+        when(movieGateway.getMovieFromId("movie_1")).thenReturn(movie);
+        Slot pastSlot = new Slot("slot1", Time.valueOf(LocalTime.now().minusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
+        when(slotService.getSlotById(1)).thenReturn(pastSlot);
+        String expected = "400 : Past slot not allowed";
 
         ShowException showException = assertThrows(ShowException.class, () -> showService.addShow(showRequest));
         assertEquals(expected, showException.getMessage());
