@@ -78,18 +78,6 @@ public class ShowServiceTest {
         assertThat(actualShows, is(equalTo(expectedShows)));
     }
 
-//    @Test
-//    void should_be_able_to_add_new_show() throws ShowException, IOException, FormatException {
-//        Slot slotOne = new Slot();
-//        Date date = Date.valueOf("2022-04-25");
-//        ShowService showService = new ShowService(showRepository, movieGateway);
-//        ShowRequest showRequest = new ShowRequest(date, slotOne, new BigDecimal("299.99"), "movie_1");
-//
-//        showService.addShow(showRequest);
-//
-//        verify(showRepository).save(new Show(showRequest.getDate(), showRequest.getSlot(), showRequest.getCost(), showRequest.getMovieId()));
-//    }
-
     @Test
     void should_Throw_An_Exception_When_Try_To_Add_Past_Show() {
         Date date = Date.valueOf("2020-01-01");
@@ -155,5 +143,21 @@ public class ShowServiceTest {
 
         ShowException showException = assertThrows(ShowException.class, () -> showService.addShow(showRequest));
         assertEquals(expected, showException.getMessage());
+    }
+
+    @Test
+    void should_be_able_to_add_new_show() throws ShowException, IOException, FormatException {
+        Slot slotOne = new Slot();
+        Date date = Date.valueOf("2022-04-25");
+        ShowService showService = new ShowService(showRepository, movieGateway,slotService);
+        ShowRequest showRequest = new ShowRequest(date, 1, new BigDecimal("299.99"), "movie_1");
+        Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
+        when(movieGateway.getMovieFromId("movie_1")).thenReturn(movie);
+        Slot slot = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
+        when(slotService.getSlotById(1)).thenReturn(slot);
+
+        showService.addShow(showRequest);
+
+        verify(showRepository).save(new Show(showRequest.getDate(), slot, showRequest.getCost(), showRequest.getMovieId()));
     }
 }
