@@ -57,7 +57,7 @@ public class ShowController {
             @ApiResponse(code = 400, message = "Server cannot process request due to client error", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
     })
-    public void add(@RequestBody ShowRequest showRequest) throws ShowException {
+    public void add(@RequestBody ShowRequest showRequest) throws ShowException, IOException, FormatException {
         showService.addShow(showRequest);
     }
 

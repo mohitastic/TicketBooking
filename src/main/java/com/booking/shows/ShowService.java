@@ -34,9 +34,13 @@ public class ShowService {
         return movieGateway.getMovieFromId(movieId);
     }
 
-    public void addShow(ShowRequest request) throws ShowException {
-        if(request.getDate().compareTo(Date.valueOf(LocalDate.now())) < 0)
+    public void addShow(ShowRequest request) throws ShowException, IOException, FormatException {
+        if (request.getDate().compareTo(Date.valueOf(LocalDate.now())) < 0)
             throw new ShowException("400 : Past date not allowed");
+
+        if (movieGateway.getMovieFromId(request.getMovieId()) == null)
+            throw new ShowException("404 : Movie Id not exist");
+
         Show show = new Show(request.getDate(), request.getSlot(), request.getCost(), request.getMovieId());
         showRepository.save(show);
     }
