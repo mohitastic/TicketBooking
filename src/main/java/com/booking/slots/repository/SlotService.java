@@ -24,7 +24,7 @@ public class SlotService {
         this.slotRepository = slotRepository;
     }
 
-    public Slot getSlotById(int slotId){
+    public Slot getSlotById(int slotId) {
         return slotRepository.getById(slotId);
     }
 

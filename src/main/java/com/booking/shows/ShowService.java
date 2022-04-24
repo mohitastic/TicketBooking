@@ -56,6 +56,9 @@ public class ShowService {
         if (isCurrentDate(request.getDate()) && !futureSlots(slot))
             throw new ShowException("400 : Past slot not allowed");
 
+        if (showRepository.findBySlotIdAndDate(1, request.getDate()) != null)
+            throw new ShowException("409 : Show already added in this slot");
+
         Show show = new Show(request.getDate(), slot, request.getCost(), request.getMovieId());
         showRepository.save(show);
     }

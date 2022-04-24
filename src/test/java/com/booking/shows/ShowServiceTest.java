@@ -29,7 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+
 public class ShowServiceTest {
+
     private ShowRepository showRepository;
     private MovieGateway movieGateway;
     private SlotService slotService;
@@ -133,6 +135,23 @@ public class ShowServiceTest {
         Slot pastSlot = new Slot("slot1", Time.valueOf(LocalTime.now().minusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
         when(slotService.getSlotById(1)).thenReturn(pastSlot);
         String expected = "400 : Past slot not allowed";
+
+        ShowException showException = assertThrows(ShowException.class, () -> showService.addShow(showRequest));
+        assertEquals(expected, showException.getMessage());
+    }
+
+    @Test
+    void should_Throw_An_Exception_When_Try_To_Add_Show_To_Already_Booked_Slot() throws IOException, FormatException {
+        Date date = Date.valueOf(LocalDate.now());
+        ShowService showService = new ShowService(showRepository, movieGateway, slotService);
+        ShowRequest showRequest = new ShowRequest(date, 1, new BigDecimal("299.99"), "movie_1");
+        Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
+        when(movieGateway.getMovieFromId("movie_1")).thenReturn(movie);
+        Slot slot = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
+        when(slotService.getSlotById(1)).thenReturn(slot);
+        Show show = new Show(Date.valueOf("2020-01-01"), slot, new BigDecimal("299.99"), "movie_1");
+        when(showRepository.findBySlotIdAndDate(1, date)).thenReturn(show);
+        String expected = "409 : Show already added in this slot";
 
         ShowException showException = assertThrows(ShowException.class, () -> showService.addShow(showRequest));
         assertEquals(expected, showException.getMessage());
