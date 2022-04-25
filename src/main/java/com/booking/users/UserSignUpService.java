@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @Service
 public class UserSignUpService {
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
-    private static final String PHONE_NUMBER_PATTERN = "\\d{10}";
+    private static final String PHONE_NUMBER_PATTERN = "^[1-9]([0-9]{9})$";
     private static final String EMAIL_ADDRESS_PATTERN = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
     private UserRepository userRepository;
