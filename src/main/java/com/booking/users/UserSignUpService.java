@@ -46,9 +46,16 @@ public class UserSignUpService {
 
         Optional<User> user = userRepository.findByUsername(username);
         userAlreadyExists(user);
-
+        Optional<UserDetails> userDetails = userDetailsRepository.findByPhoneNumber(phoneNumber);
+        phoneNumberAlreadyExists(userDetails);
         User savedUser = userRepository.save(new User(username, password));
         userDetailsRepository.save(new UserDetails(name, dob, email, phoneNumber, savedUser));
+    }
+
+    private void phoneNumberAlreadyExists(Optional<UserDetails> userDetails) throws UserSignUpException {
+        if(!userDetails.isEmpty()){
+            throw new UserSignUpException("Phone Number already exists");
+        }
     }
 
 

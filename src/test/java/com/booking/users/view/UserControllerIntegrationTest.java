@@ -2,6 +2,7 @@ package com.booking.users.view;
 
 import com.booking.App;
 import com.booking.exceptions.ChangePasswordException;
+import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.model.User;
 import com.booking.users.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -32,13 +33,18 @@ class UserControllerIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
+
     @BeforeEach
     public void before() {
+        userDetailsRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @AfterEach
     public void after() {
+        userDetailsRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -89,6 +95,46 @@ class UserControllerIntegrationTest {
         mockMvc.perform(
                         put("/changePassword")
                                 .with(httpBasic("test-user", "password"))
+                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .content(bodyJson)
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldSignUpSuccessfully() throws Exception {
+        final String bodyJson = "{" +
+                "\"name\": \"user4\"," +
+                "\"username\": \"user4\"," +
+                "\"dob\": \"1996-04-19\"," +
+                "\"email\": \"user@email.com\"," +
+                "\"phoneNumber\": \"1234567899\"," +
+                "\"password\": \"Password@4\"," +
+                "\"confirmPassword\": \"Password@4\"" +
+                "}";
+
+        mockMvc.perform(
+                        post("/signup")
+                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .content(bodyJson)
+                )
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void shouldFailWhenTheRequestIsBad() throws Exception {
+        final String bodyJson = "{" +
+                "\"name\": \"user4\"," +
+                "\"username\": \"user4\"," +
+                "\"dob\": \"1996-04-19\"," +
+                "\"email\": \"useremail.com\"," +
+                "\"phoneNumber\": \"1234567899\"," +
+                "\"password\": \"Password@4\"," +
+                "\"confirmPassword\": \"Password@4\"" +
+                "}";
+
+        mockMvc.perform(
+                        post("/signup")
                                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                                 .content(bodyJson)
                 )
