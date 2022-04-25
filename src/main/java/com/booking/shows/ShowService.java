@@ -41,27 +41,52 @@ public class ShowService {
         return movieGateway.getMovieFromId(movieId);
     }
 
-    public void addShow(ShowRequest request) throws ShowException, IOException, FormatException {
-        if (isPastDate(request.getDate()))
-            throw new ShowException("400 : Past date not allowed");
+    public void addShow(ShowRequest request) throws ShowException, IOException {
+        dateIsNotPastDate(request.getDate());
 
-        if (movieGateway.getMovieFromId(request.getMovieId()) == null)
-            throw new ShowException("404 : Movie Id does not exist");
+        movieIdExist(request.getMovieId());
 
         Slot slot = slotService.getSlotById(request.getSlotId());
+        slotAlreadyExist(slot);
 
-        if (slot == null) {
-            throw new ShowException("404 : Slot Id does not exist");
-        }
+        notPastSlotOfCurrentDate(request.getDate(), slot);
 
-        if (isCurrentDate(request.getDate()) && !futureSlots(slot))
-            throw new ShowException("400 : Past slot not allowed");
-
-        if (showRepository.findBySlotIdAndDate(1, request.getDate()) != null)
-            throw new ShowException("409 : Show already added in this slot");
+        //showNotExistForTheGivenSlot(request.getDate(), slot);
+        Show bySlotIdAndDate = showRepository.findBySlotIdAndDate(slot.getId(), request.getDate());
+        if (bySlotIdAndDate != null)
+            throw new ShowException("Show already added in this slot");
 
         Show show = new Show(request.getDate(), slot, request.getCost(), request.getMovieId());
         showRepository.save(show);
+    }
+
+    private void dateIsNotPastDate(Date date) throws ShowException {
+        if (isPastDate(date))
+            throw new ShowException("Past date not allowed");
+    }
+
+    private void movieIdExist(String movieId) throws ShowException, IOException {
+        try {
+            movieGateway.getMovieFromId(movieId);
+        } catch (FormatException e) {
+            throw new ShowException("Movie Id does not exist");
+        }
+    }
+
+    private void slotAlreadyExist(Slot slot) throws ShowException {
+        if (slot == null) {
+            throw new ShowException("Slot Id does not exist");
+        }
+    }
+
+    private void notPastSlotOfCurrentDate(Date date, Slot slot) throws ShowException {
+        if (isCurrentDate(date) && !futureSlots(slot))
+            throw new ShowException("Past slot not allowed");
+    }
+
+    private void showNotExistForTheGivenSlot(Date date, Slot slot) throws ShowException {
+        if (showRepository.findBySlotIdAndDate(slot.getId(), date) != null)
+            throw new ShowException("Show already added in this slot");
     }
 
     private boolean futureSlots(Slot slot) {
