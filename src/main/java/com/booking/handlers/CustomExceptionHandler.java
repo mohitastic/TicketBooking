@@ -1,9 +1,6 @@
 package com.booking.handlers;
 
-import com.booking.exceptions.ChangePasswordException;
-import com.booking.exceptions.EnumValidationException;
-import com.booking.exceptions.SlotException;
-import com.booking.exceptions.UserSignUpException;
+import com.booking.exceptions.*;
 import com.booking.handlers.models.ErrorResponse;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import org.jetbrains.annotations.NotNull;
@@ -80,6 +77,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SlotException.class)
     public ResponseEntity<ErrorResponse> handleSlotException(SlotException e) {
+        ErrorResponse error = new ErrorResponse("Bad Request", new ArrayList<>() {{
+            add(e.getMessage());
+        }});
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ShowException.class)
+    public ResponseEntity<ErrorResponse> handleShowException(ShowException e) {
         ErrorResponse error = new ErrorResponse("Bad Request", new ArrayList<>() {{
             add(e.getMessage());
         }});

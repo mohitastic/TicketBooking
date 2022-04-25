@@ -53,11 +53,11 @@ public class ShowController {
     @ApiOperation(value = "create new show")
     @ResponseStatus(code = HttpStatus.CREATED)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created a booking successfully"),
+            @ApiResponse(code = 201, message = "Created a show successfully"),
             @ApiResponse(code = 400, message = "Server cannot process request due to client error", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
     })
-    public void add(@RequestBody ShowRequest showRequest) throws ShowException, IOException, FormatException {
+    public void add(@RequestBody ShowRequest showRequest) throws ShowException, IOException {
         showService.addShow(showRequest);
     }
 

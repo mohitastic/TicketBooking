@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,9 +24,13 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,5 +94,34 @@ public class ShowControllerIntegrationTest {
                                 "'slot':{'id':" + slotTwo.getId() + ",'name':'Test slot two','startTime':'1:30 PM','endTime':'4:00 PM'}," +
                                 "'movie':{'id':'movie_1','name':'Movie name','duration':'1h 30m','plot':'Movie plot'}}" +
                                 "]"));
+    }
+
+    @Test
+    void shouldNotAddTheShow() throws Exception {
+        Slot slotOne = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
+        slotRepository.save(slotOne);
+        List<Slot> slots = slotRepository.findAll();
+
+        mockMvc.perform(
+                        post("/shows")
+                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .content("{\"cost\":299.99,\"date\":\"2022-04-01\",\"movieId\":\"movie_1\",\"slotId\":" + slots.get(0).getId() + "}")
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldAddTheShowSuccessfully() throws Exception {
+        Date date = Date.valueOf(LocalDate.now());
+        Slot slotOne = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
+        slotRepository.save(slotOne);
+        List<Slot> slots = slotRepository.findAll();
+
+        mockMvc.perform(
+                        post("/shows")
+                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .content("{\"cost\":299.99,\"date\":\"" + date + "\",\"movieId\":\"movie_1\",\"slotId\":" + slots.get(0).getId() + "}")
+                )
+                .andExpect(status().isCreated());
     }
 }
