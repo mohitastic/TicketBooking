@@ -46,6 +46,16 @@ public class UserSignUpServiceTest {
     }
 
     @Test
+    void shouldFailWhenNamedPatternIsNotFollowed() {
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc12", "abc", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "Password@1", "Password@1");
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        String expectedExceptionMessage = "Name does not match the pattern";
+
+        UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
+        assertEquals(userSignUpException.getMessage(), expectedExceptionMessage);
+    }
+
+    @Test
     void shouldFailWhenPasswordPatternIsNotFollowed() {
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "password@1", "password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);

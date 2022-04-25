@@ -104,7 +104,7 @@ class UserControllerIntegrationTest {
     @Test
     void shouldSignUpSuccessfully() throws Exception {
         final String bodyJson = "{" +
-                "\"name\": \"user4\"," +
+                "\"name\": \"user\"," +
                 "\"username\": \"user4\"," +
                 "\"dob\": \"1996-04-19\"," +
                 "\"email\": \"user@email.com\"," +

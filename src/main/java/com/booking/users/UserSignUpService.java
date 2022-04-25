@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserSignUpService {
+    private static  final String NAME_PATTERN = "^[A-Za-z .]+$";
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
     private static final String PHONE_NUMBER_PATTERN = "^[1-9]([0-9]{9})$";
     private static final String EMAIL_ADDRESS_PATTERN = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
@@ -35,6 +36,8 @@ public class UserSignUpService {
         Date dob = userSignUpRequest.getDob();
 
         fieldNotEmptyCheck(name, username, email, phoneNumber, password, confirmPassword);
+
+        patternMatchCheckForName(name);
 
         passwordSameAsConfirmPassword(password, confirmPassword);
 
@@ -62,6 +65,12 @@ public class UserSignUpService {
     private void userAlreadyExists(Optional<User> user) throws UserSignUpException{
         if (! user.isEmpty()){
             throw new UserSignUpException("User name already exists");
+        }
+    }
+
+    private void patternMatchCheckForName(String name) throws UserSignUpException {
+        if(!Pattern.matches(NAME_PATTERN, name)){
+            throw new UserSignUpException("Name does not match the pattern");
         }
     }
 
