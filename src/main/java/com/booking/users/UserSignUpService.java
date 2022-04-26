@@ -25,6 +25,7 @@ public class UserSignUpService {
         this.userRepository = userRepository;
         this.userDetailsRepository = userDetailsRepository;
     }
+    private static final Date TODAY_DATE  = Date.valueOf(String.valueOf(java.time.LocalDate.now()));
 
     public void execute(UserSignUpRequest userSignUpRequest) throws UserSignUpException {
         String name = userSignUpRequest.getName();
@@ -38,6 +39,8 @@ public class UserSignUpService {
         fieldNotEmptyCheck(name, username, email, phoneNumber, password, confirmPassword);
 
         patternMatchCheckForName(name);
+
+        validateForFutureDate(dob);
 
         passwordSameAsConfirmPassword(password, confirmPassword);
 
@@ -53,6 +56,12 @@ public class UserSignUpService {
         phoneNumberAlreadyExists(userDetails);
         User savedUser = userRepository.save(new User(username, password));
         userDetailsRepository.save(new UserDetails(name, dob, email, phoneNumber, savedUser));
+    }
+
+    private void validateForFutureDate(Date dob) throws UserSignUpException {
+        if(dob.after(TODAY_DATE)){
+            throw new UserSignUpException("Invalid Date Of Birth");
+        }
     }
 
     private void phoneNumberAlreadyExists(Optional<UserDetails> userDetails) throws UserSignUpException {

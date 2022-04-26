@@ -27,7 +27,8 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldHaveValuesForAllFieldsInTheSignUp() {
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", new Date(1996, 04, 19), "bac@gmail.com", "", "Password@1", "Password@1");
+        Date date = Date.valueOf("1996-04-19");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "The fields cannot be empty.";
 
@@ -37,7 +38,8 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldFailWhenPasswordDoesNotMatchConfirmPassword() {
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "Password@1", "Password@2");
+        Date date = Date.valueOf("1996-04-19");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "1234567890", "Password@1", "Password@2");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Password does not match Confirm Password";
 
@@ -47,7 +49,8 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldFailWhenNamedPatternIsNotFollowed() {
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc12", "abc", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "Password@1", "Password@1");
+        Date date = Date.valueOf("1996-04-19");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc12", "abc", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Name does not match the pattern";
 
@@ -57,7 +60,8 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldFailWhenPasswordPatternIsNotFollowed() {
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "password@1", "password@1");
+        Date date = Date.valueOf("2020-04-19");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "1234567890", "password@1", "password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Password does not match the pattern";
 
@@ -67,7 +71,8 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldFailWhenThePhoneNumberDoesNotHaveTenDigits() {
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", new Date(1996, 04, 19), "bac@gmail.com", "123456789", "Password@1", "Password@1");
+        Date date = Date.valueOf("1996-04-19");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "123456789", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Phone number is not valid";
 
@@ -77,7 +82,8 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldFailWhenTheEmailIsInvalid() {
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", new Date(1996, 04, 19), "bacgmail@.com", "1234567890", "Password@1", "Password@1");
+        Date date = Date.valueOf("1996-04-19");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bacgmail@.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Email address is not valid";
 
@@ -86,10 +92,26 @@ public class UserSignUpServiceTest {
     }
 
     @Test
-    void shouldFailWhenUserNameAlreadyExists() {
+    void shouldFailWhenUserEntersFutureDateOfBirth() {
         String username = "test-user";
         User user = new User(username, "correct-password");
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "Password@1", "Password@1");
+        Date date = Date.valueOf("2022-04-28");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abcde", "test-userrr", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        String expectedExceptionMessage = "Invalid Date Of Birth";
+
+        when(mockUserRepository.findByUsername(username)).thenReturn(Optional.ofNullable(user));
+
+        UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
+        assertEquals(userSignUpException.getMessage(), expectedExceptionMessage);
+    }
+
+    @Test
+    void shouldFailWhenUserNameAlreadyExists() {
+        Date date = Date.valueOf("1996-04-19");
+        String username = "test-user";
+        User user = new User(username, "correct-password");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "User name already exists";
 
@@ -102,9 +124,10 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldFailWhenPhoneNumberAlreadyExists() {
-        UserDetails userDetails = new UserDetails("abc", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", new User("test", "Password@1"));
+        Date date = Date.valueOf("1996-04-19");
+        UserDetails userDetails = new UserDetails("abc", date, "bac@gmail.com", "1234567890", new User("test", "Password@1"));
         mockUserDetailsRepository.save(userDetails);
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "Password@1", "Password@1");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Phone Number already exists";
 
@@ -117,7 +140,8 @@ public class UserSignUpServiceTest {
 
     @Test
     void shouldPassWhenSignUpIsSuccessful() {
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", new Date(1996, 04, 19), "bac@gmail.com", "1234567890", "Password@1", "Password@1");
+        Date date = Date.valueOf("1996-04-19");
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
 
         when(mockUserRepository.findByUsername("abc")).thenReturn(Optional.ofNullable(null));
