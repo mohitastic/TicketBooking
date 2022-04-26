@@ -24,7 +24,7 @@ public class ShowRequest {
 
     @NotNull
     @JsonProperty
-    @DecimalMin(value = "0.0", inclusive = false, message = "Cost should be greater than {value}")
+    @DecimalMin(value = "0.0", message = "Cost should be greater than {value}")
     @ApiModelProperty(name = "cost", value = "cost of movie", required = true, position = 3)
     private BigDecimal cost;
 
@@ -58,6 +58,5 @@ public class ShowRequest {
         this.cost = cost;
         this.movieId = movieId;
     }
-
 }
 
