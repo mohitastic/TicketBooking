@@ -136,8 +136,7 @@ public class ShowServiceTest {
 
     @Test
     void should_be_able_to_add_new_show() throws ShowException, IOException, FormatException {
-        Slot slotOne = new Slot();
-        Date date = Date.valueOf("2022-04-25");
+        Date date = Date.valueOf(LocalDate.now());
         ShowService showService = new ShowService(showRepository, movieGateway,slotService);
         ShowRequest showRequest = new ShowRequest(date, 1, new BigDecimal("299.99"), "movie_1");
         Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");

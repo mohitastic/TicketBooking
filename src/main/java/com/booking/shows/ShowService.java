@@ -51,10 +51,7 @@ public class ShowService {
 
         notPastSlotOfCurrentDate(request.getDate(), slot);
 
-        //showNotExistForTheGivenSlot(request.getDate(), slot);
-        Show bySlotIdAndDate = showRepository.findBySlotIdAndDate(slot.getId(), request.getDate());
-        if (bySlotIdAndDate != null)
-            throw new ShowException("Show already added in this slot");
+        showNotExistForTheGivenSlot(request.getDate(), slot);
 
         Show show = new Show(request.getDate(), slot, request.getCost(), request.getMovieId());
         showRepository.save(show);
