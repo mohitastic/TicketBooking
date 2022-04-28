@@ -95,7 +95,7 @@ public class UserSignUpServiceTest {
     void shouldFailWhenUserEntersFutureDateOfBirth() {
         String username = "test-user";
         User user = new User(username, "correct-password");
-        Date date = Date.valueOf(java.time.LocalDate.now().plusDays(1));
+        Date date = Date.valueOf(java.time.LocalDate.now().plusDays(2));
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abcde", "test-userrr", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Invalid Date Of Birth";
