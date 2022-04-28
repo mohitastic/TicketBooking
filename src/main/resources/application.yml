@@ -12,3 +12,11 @@ logging:
 application:
   uiHost: ${UI_HOST}
   movieServiceHost: ${MOVIE_SERVICE_HOST}
+togglz:
+  enabled: true
+  feature-enums: com.booking.toggles.Features
+  console:
+    enabled: true
+    path: /togglz-console
+    secured: true
+    use-management-port: false

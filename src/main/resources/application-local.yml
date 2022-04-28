@@ -12,3 +12,11 @@ logging:
 application:
   uiHost: http://localhost:3000
   movieServiceHost: http://ec2-3-110-221-211.ap-south-1.compute.amazonaws.com:4567/
+togglz:
+  enabled: true
+  feature-enums: com.booking.toggles.Features
+  console:
+    enabled: true
+    path: /togglz-console
+    secured: true
+    use-management-port: false

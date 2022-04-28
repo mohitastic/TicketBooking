@@ -46,6 +46,10 @@ test {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation("org.togglz:togglz-spring-boot-starter:2.9.8")
+    implementation("org.togglz:togglz-console:2.9.8")
+    implementation("org.togglz:togglz-spring-security:2.9.8")
+    implementation("com.github.heneke.thymeleaf:thymeleaf-extras-togglz:2.0.1.RELEASE")
     implementation('com.fasterxml.jackson.core:jackson-databind:2.13.2.1') {
         version {
             strictly '2.13.2.1'
