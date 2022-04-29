@@ -3,6 +3,8 @@ package com.booking.movie.view;
 import com.booking.handlers.models.ErrorResponse;
 import com.booking.movie.MovieService;
 import com.booking.movieGateway.models.Movie;
+import com.booking.toggles.FeatureAssociation;
+import com.booking.toggles.Features;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -28,6 +30,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @FeatureAssociation(value = Features.MOVIE_SCHEDULE)
     @GetMapping
     @ApiOperation(value = "Fetch all movies")
     @ResponseStatus(code = HttpStatus.OK)
