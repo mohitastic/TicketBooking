@@ -67,9 +67,7 @@ public class UserController {
     }
     @GetMapping("/userDetails")
     Map<String, Object> userDetails(@Valid @RequestParam(name = "username") String username) throws UserDetailNotFoundException {
-        System.out.println(username);
         UserDetail userDetails = userDetailsService.fetch(username);
-        System.out.println("User "+userDetails);
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String date = formatter.format(userDetails.getDob());
         Map<String,Object> user = new HashMap<>();

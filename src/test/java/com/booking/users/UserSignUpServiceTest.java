@@ -88,8 +88,8 @@ public class UserSignUpServiceTest {
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Email address is not valid";
 
-        UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
-        assertEquals(userSignUpException.getMessage(), expectedExceptionMessage);
+        PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
+        assertEquals(patternDoesNotMatchException.getMessage(), expectedExceptionMessage);
     }
 
     @Test
