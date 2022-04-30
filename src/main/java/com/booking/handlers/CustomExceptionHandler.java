@@ -75,6 +75,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PatternDoesNotMatchException.class)
+    public ResponseEntity<ErrorResponse> handlePatternDoesNotMatchException(PatternDoesNotMatchException e) {
+        ErrorResponse error = new ErrorResponse("Bad Request", new ArrayList<>() {{
+            add(e.getMessage());
+        }});
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(SlotException.class)
     public ResponseEntity<ErrorResponse> handleSlotException(SlotException e) {
         ErrorResponse error = new ErrorResponse("Bad Request", new ArrayList<>() {{
@@ -89,6 +97,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             add(e.getMessage());
         }});
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserDetailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserDetailException(UserDetailNotFoundException e) {
+        ErrorResponse error = new ErrorResponse("Record Not Found", new ArrayList<>() {{
+            add(e.getMessage());
+        }});
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

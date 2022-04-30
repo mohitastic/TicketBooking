@@ -4,7 +4,7 @@ import com.booking.exceptions.*;
 import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
-import com.booking.users.repository.model.UserDetails;
+import com.booking.users.repository.model.UserDetail;
 import com.booking.users.view.model.UserSignUpRequest;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserSignUpService {
-    private static  final String NAME_PATTERN = "^[A-Za-z .]+$";
+    private static  final String NAME_PATTERN = "^(?![\\s.]+$)[a-zA-Z\\s.]*$";
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
     private static final String PHONE_NUMBER_PATTERN = "^[1-9]([0-9]{9})$";
     private static final String EMAIL_ADDRESS_PATTERN = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
@@ -27,7 +27,7 @@ public class UserSignUpService {
     }
     private static final Date TODAY_DATE  = Date.valueOf(String.valueOf(java.time.LocalDate.now()));
 
-    public void execute(UserSignUpRequest userSignUpRequest) throws UserSignUpException {
+    public void execute(UserSignUpRequest userSignUpRequest) throws UserSignUpException, PatternDoesNotMatchException {
         String name = userSignUpRequest.getName();
         String username = userSignUpRequest.getUsername();
         String email = userSignUpRequest.getEmail();
@@ -52,10 +52,10 @@ public class UserSignUpService {
 
         Optional<User> user = userRepository.findByUsername(username);
         userAlreadyExists(user);
-        Optional<UserDetails> userDetails = userDetailsRepository.findByPhoneNumber(phoneNumber);
+        Optional<UserDetail> userDetails = userDetailsRepository.findByPhoneNumber(phoneNumber);
         phoneNumberAlreadyExists(userDetails);
         User savedUser = userRepository.save(new User(username, password));
-        userDetailsRepository.save(new UserDetails(name, dob, email, phoneNumber, savedUser));
+        userDetailsRepository.save(new UserDetail(name, dob, email, phoneNumber, savedUser));
     }
 
     private void validateForFutureDate(Date dob) throws UserSignUpException {
@@ -64,7 +64,7 @@ public class UserSignUpService {
         }
     }
 
-    private void phoneNumberAlreadyExists(Optional<UserDetails> userDetails) throws UserSignUpException {
+    private void phoneNumberAlreadyExists(Optional<UserDetail> userDetails) throws UserSignUpException {
         if(!userDetails.isEmpty()){
             throw new UserSignUpException("Phone Number already exists");
         }
@@ -77,27 +77,27 @@ public class UserSignUpService {
         }
     }
 
-    private void patternMatchCheckForName(String name) throws UserSignUpException {
+    private void patternMatchCheckForName(String name) throws PatternDoesNotMatchException {
         if(!Pattern.matches(NAME_PATTERN, name)){
-            throw new UserSignUpException("Name does not match the pattern");
+            throw new PatternDoesNotMatchException("Name does not match the pattern");
         }
     }
 
-    private void patternMatchCheckForEmailAddress(String email) throws UserSignUpException {
+    private void patternMatchCheckForEmailAddress(String email) throws PatternDoesNotMatchException {
         if(!Pattern.matches(EMAIL_ADDRESS_PATTERN, email)){
-            throw new UserSignUpException("Email address is not valid");
+            throw new PatternDoesNotMatchException("Email address is not valid");
         }
     }
 
-    private void patternMatchCheckForPhoneNumber(String phoneNumber) throws UserSignUpException {
+    private void patternMatchCheckForPhoneNumber(String phoneNumber) throws PatternDoesNotMatchException {
         if(!Pattern.matches(PHONE_NUMBER_PATTERN, phoneNumber)){
-            throw new UserSignUpException("Phone number is not valid");
+            throw new PatternDoesNotMatchException("Phone number is not valid");
         }
     }
 
-    private void patternMatchCheckForPassword(String password) throws UserSignUpException {
+    private void patternMatchCheckForPassword(String password) throws PatternDoesNotMatchException {
         if (!Pattern.matches(PASSWORD_PATTERN, password)) {
-            throw new UserSignUpException("Password does not match the pattern");
+            throw new PatternDoesNotMatchException("Password does not match the pattern");
         }
     }
 

@@ -3,6 +3,7 @@ package com.booking.bookings.view;
 import com.booking.bookings.BookingService;
 import com.booking.bookings.repository.Booking;
 import com.booking.exceptions.NoSeatAvailableException;
+import com.booking.exceptions.PatternDoesNotMatchException;
 import com.booking.handlers.models.ErrorResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +36,7 @@ public class BookingController {
             @ApiResponse(code = 400, message = "Server cannot process request due to client error", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
     })
-    public BookingConfirmationResponse book(@Valid @RequestBody BookingRequest bookingRequest) throws NoSeatAvailableException {
+    public BookingConfirmationResponse book(@Valid @RequestBody BookingRequest bookingRequest) throws NoSeatAvailableException, PatternDoesNotMatchException {
         Booking booking = bookingService.book(bookingRequest.getCustomer(), bookingRequest.getShowId(), bookingRequest.getDate(), bookingRequest.getNoOfSeats());
         return booking.constructBookingConfirmation();
     }

@@ -5,6 +5,7 @@ import com.booking.bookings.repository.BookingRepository;
 import com.booking.customers.repository.Customer;
 import com.booking.customers.repository.CustomerRepository;
 import com.booking.exceptions.NoSeatAvailableException;
+import com.booking.exceptions.PatternDoesNotMatchException;
 import com.booking.shows.respository.Show;
 import com.booking.shows.respository.ShowRepository;
 import com.booking.slots.repository.Slot;
@@ -47,7 +48,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    public void should_save_booking() throws NoSeatAvailableException {
+    public void should_save_booking() throws NoSeatAvailableException, PatternDoesNotMatchException {
         int noOfSeats = 2;
         Booking booking = new Booking(bookingDate, show, customer, noOfSeats, BigDecimal.valueOf(500));
         when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.of(show));
@@ -61,7 +62,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    public void should_save_customer_who_requests_booking() throws NoSeatAvailableException {
+    public void should_save_customer_who_requests_booking() throws NoSeatAvailableException, PatternDoesNotMatchException {
         when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.of(show));
         bookingService.book(customer, TEST_SHOW_ID, bookingDate, 2);
 

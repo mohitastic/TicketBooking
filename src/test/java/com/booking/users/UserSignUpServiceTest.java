@@ -1,10 +1,11 @@
 package com.booking.users;
 
+import com.booking.exceptions.PatternDoesNotMatchException;
 import com.booking.exceptions.UserSignUpException;
 import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
-import com.booking.users.repository.model.UserDetails;
+import com.booking.users.repository.model.UserDetail;
 import com.booking.users.view.model.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,14 +49,14 @@ public class UserSignUpServiceTest {
     }
 
     @Test
-    void shouldFailWhenNamedPatternIsNotFollowed() {
+    void shouldFailWhenNamePatternIsNotFollowed() {
         Date date = Date.valueOf("1996-04-19");
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc12", "abc", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Name does not match the pattern";
 
-        UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
-        assertEquals(userSignUpException.getMessage(), expectedExceptionMessage);
+        PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
+        assertEquals(patternDoesNotMatchException.getMessage(), expectedExceptionMessage);
     }
 
     @Test
@@ -65,8 +66,8 @@ public class UserSignUpServiceTest {
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Password does not match the pattern";
 
-        UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
-        assertEquals(userSignUpException.getMessage(), expectedExceptionMessage);
+        PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
+        assertEquals(patternDoesNotMatchException.getMessage(), expectedExceptionMessage);
     }
 
     @Test
@@ -76,8 +77,8 @@ public class UserSignUpServiceTest {
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "Phone number is not valid";
 
-        UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
-        assertEquals(userSignUpException.getMessage(), expectedExceptionMessage);
+        PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
+        assertEquals(patternDoesNotMatchException.getMessage(), expectedExceptionMessage);
     }
 
     @Test
@@ -125,7 +126,7 @@ public class UserSignUpServiceTest {
     @Test
     void shouldFailWhenPhoneNumberAlreadyExists() {
         Date date = Date.valueOf("1996-04-19");
-        UserDetails userDetails = new UserDetails("abc", date, "bac@gmail.com", "1234567890", new User("test", "Password@1"));
+        UserDetail userDetails = new UserDetail("abc", date, "bac@gmail.com", "1234567890", new User("test", "Password@1"));
         mockUserDetailsRepository.save(userDetails);
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);

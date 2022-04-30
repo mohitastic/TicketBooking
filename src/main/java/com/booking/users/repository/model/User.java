@@ -26,10 +26,33 @@ public class User {
     @ApiModelProperty(name = "password", value = "Password of the user", required = true, example = "password", position = 2)
     private String password;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    private UserDetail userDetails;
+
+    public User(String username, String password, UserDetail userDetails) {
+        this.username = username;
+        this.password = password;
+        this.userDetails = userDetails;
+    }
+
     public User() {
     }
 
+    public UserDetail getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(UserDetail userDetails) {
+        this.userDetails = userDetails;
+    }
+
     public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(Long id, String username, String password) {
+        this.id = id;
         this.username = username;
         this.password = password;
     }

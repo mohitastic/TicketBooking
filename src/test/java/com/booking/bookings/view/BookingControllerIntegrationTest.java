@@ -97,7 +97,7 @@ public class BookingControllerIntegrationTest {
         final String requestJson = "{" +
                 "\"date\": \"2020-06-01\"," +
                 "\"showId\": " + showOne.getId() + "," +
-                "\"customer\": " + "{\"name\": \"Customer 1\", \"phoneNumber\": \"9922334455\"}," +
+                "\"customer\": " + "{\"name\": \"Customer\", \"phoneNumber\": \"9922334455\"}," +
                 "\"noOfSeats\": 2" +
                 "}";
 
@@ -108,7 +108,7 @@ public class BookingControllerIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(content().json("{" +
-                        "\"customerName\":\"Customer 1\"," +
+                        "\"customerName\":\"Customer\"," +
                         "\"showDate\":\"2020-01-01\"," +
                         "\"startTime\":\"09:30:00\"," +
                         "\"amountPaid\":499.98," +
@@ -123,7 +123,7 @@ public class BookingControllerIntegrationTest {
         final String moreThanAllowedSeatsRequestJson = "{" +
                 "\"date\": \"2020-06-01\"," +
                 "\"showId\": " + showOne.getId() + "," +
-                "\"customer\": " + "{\"name\": \"Customer 1\", \"phoneNumber\": \"9922334455\"}," +
+                "\"customer\": " + "{\"name\": \"Customer\", \"phoneNumber\": \"9922334455\"}," +
                 "\"noOfSeats\": " + (Integer.parseInt(MAX_NO_OF_SEATS_PER_BOOKING) + 1) +
                 "}";
 
@@ -158,7 +158,7 @@ public class BookingControllerIntegrationTest {
         final String successRequest = "{" +
                 "\"date\": \"2020-06-01\"," +
                 "\"showId\": " + showOne.getId() + "," +
-                "\"customer\": " + "{\"name\": \"Customer 1\", \"phoneNumber\": \"9922334455\"}," +
+                "\"customer\": " + "{\"name\": \"Customer\", \"phoneNumber\": \"9922334455\"}," +
                 "\"noOfSeats\": " + MAX_NO_OF_SEATS_PER_BOOKING +
                 "}";
 

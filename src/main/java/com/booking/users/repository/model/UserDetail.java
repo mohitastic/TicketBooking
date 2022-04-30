@@ -12,7 +12,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "user_details")
-public class UserDetails {
+public class UserDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,14 +43,14 @@ public class UserDetails {
     @ApiModelProperty(name = "mobile_number", value = "Phone number of the customer", required = true, example = "9933221100", position = 4)
     private String phoneNumber;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public UserDetails() {
+    public UserDetail() {
     }
 
-    public UserDetails(String name, Date dob, String email, String phoneNumber, User user) {
+    public UserDetail(String name, Date dob, String email, String phoneNumber, User user) {
         this.name = name;
         this.dob = dob;
         this.email = email;
@@ -92,6 +92,14 @@ public class UserDetails {
 
     public User getUser() {
         return user;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setUser(User user) {
