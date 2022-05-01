@@ -66,4 +66,19 @@ class MovieControllerTest {
                 .andExpect(content().json("[{\"id\":\"tt6644200\",\"name\":\"movie1\",\"duration\":\"1h 30m\",\"plot\":\"description\",\"posterLink\":\"link\",\"imdbRating\":\"6.3\"}," +
                         "{\"id\":\"tt6857112\",\"name\":\"movie2\",\"duration\":\"1h 30m\",\"plot\":\"description\",\"posterLink\":\"link\",\"imdbRating\":\"6.3\"}]"));
     }
+
+    @Test
+    public void shouldNotERetrieveShowsWhenFeatureIsDisabled() throws Exception {
+        featureToggleUtility.toggleFeature(Features.MOVIE_SCHEDULE, false, featureManager);
+        Movie movie1 = new Movie("tt6644200", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
+        Movie movie2 = new Movie("tt6857112", "movie2", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
+        List<Movie> movies = new ArrayList<>();
+        movies.add(movie1);
+        movies.add(movie2);
+
+        when(movieService.getAllMovies()).thenReturn(movies);
+
+        mockMvc.perform(get("/movies"))
+                .andExpect(status().isBadRequest());
+    }
 }
