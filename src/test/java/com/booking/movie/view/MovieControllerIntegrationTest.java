@@ -13,9 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.repository.FeatureState;
 import com.booking.toggles.FeatureToggleUtility;
 
 import java.time.Duration;
@@ -31,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @WithMockUser
-class MovieControllerTest {
+class MovieControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -47,11 +45,11 @@ class MovieControllerTest {
     @Autowired
     FeatureToggleUtility featureToggleUtility;
 
-    MovieControllerTest() {
+    MovieControllerIntegrationTest() {
     }
 
     @Test
-    public void retrieveAllExistingShowsWhenFeatureIsEnabled() throws Exception {
+    public void retrieveAllExistingMoviesWhenFeatureIsEnabled() throws Exception {
         featureToggleUtility.toggleFeature( Features.MOVIE_SCHEDULE,true,featureManager);
         Movie movie1 = new Movie("tt6644200", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         Movie movie2 = new Movie("tt6857112", "movie2", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
@@ -68,7 +66,7 @@ class MovieControllerTest {
     }
 
     @Test
-    public void shouldNotERetrieveShowsWhenFeatureIsDisabled() throws Exception {
+    public void shouldNotERetrieveMoviesWhenFeatureIsDisabled() throws Exception {
         featureToggleUtility.toggleFeature(Features.MOVIE_SCHEDULE, false, featureManager);
         Movie movie1 = new Movie("tt6644200", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         Movie movie2 = new Movie("tt6857112", "movie2", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
