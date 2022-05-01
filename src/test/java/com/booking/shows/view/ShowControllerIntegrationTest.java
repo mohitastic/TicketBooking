@@ -7,6 +7,8 @@ import com.booking.shows.respository.Show;
 import com.booking.shows.respository.ShowRepository;
 import com.booking.slots.repository.Slot;
 import com.booking.slots.repository.SlotRepository;
+import com.booking.toggles.FeatureToggleUtility;
+import com.booking.toggles.Features;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.togglz.core.manager.FeatureManager;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -51,6 +54,12 @@ public class ShowControllerIntegrationTest {
 
     @MockBean
     private MovieGateway movieGateway;
+
+    @Autowired
+    FeatureManager featureManager;
+
+    @Autowired
+    FeatureToggleUtility featureToggleUtility;
 
     @BeforeEach
     public void before() {
@@ -97,7 +106,8 @@ public class ShowControllerIntegrationTest {
     }
 
     @Test
-    void shouldNotAddTheShow() throws Exception {
+    void shouldNotAddTheShowWhenFeatureIsDisabled() throws Exception {
+        featureToggleUtility.toggleFeature(Features.MOVIE_SCHEDULE, false, featureManager);
         Slot slotOne = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
         slotRepository.save(slotOne);
         List<Slot> slots = slotRepository.findAll();
@@ -111,7 +121,8 @@ public class ShowControllerIntegrationTest {
     }
 
     @Test
-    void shouldAddTheShowSuccessfully() throws Exception {
+    void shouldAddTheShowSuccessfullyWhenFeatureEnabled() throws Exception {
+        featureToggleUtility.toggleFeature(Features.MOVIE_SCHEDULE, true, featureManager);
         Date date = Date.valueOf(LocalDate.now());
         Slot slotOne = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
         slotRepository.save(slotOne);

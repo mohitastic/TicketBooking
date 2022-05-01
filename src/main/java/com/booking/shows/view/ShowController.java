@@ -8,6 +8,8 @@ import com.booking.shows.ShowService;
 import com.booking.shows.respository.Show;
 import com.booking.shows.view.models.ShowRequest;
 import com.booking.shows.view.models.ShowResponse;
+import com.booking.toggles.FeatureAssociation;
+import com.booking.toggles.Features;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -49,6 +51,7 @@ public class ShowController {
         return showResponse;
     }
 
+    @FeatureAssociation(value = Features.MOVIE_SCHEDULE)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "create new show")
     @ResponseStatus(code = HttpStatus.CREATED)
