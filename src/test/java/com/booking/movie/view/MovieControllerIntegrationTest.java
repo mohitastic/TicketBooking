@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.togglz.core.manager.FeatureManager;
-import com.booking.toggles.FeatureToggleUtility;
+import org.togglz.junit5.AllDisabled;
+import org.togglz.junit5.AllEnabled;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -39,18 +39,9 @@ class MovieControllerIntegrationTest {
     @MockBean
     private MovieService movieGateway;
 
-    @Autowired
-    FeatureManager featureManager;
-
-    @Autowired
-    FeatureToggleUtility featureToggleUtility;
-
-    MovieControllerIntegrationTest() {
-    }
-
     @Test
+    @AllEnabled(Features.class)
     public void retrieveAllExistingMoviesWhenFeatureIsEnabled() throws Exception {
-        featureToggleUtility.toggleFeature( Features.MOVIE_SCHEDULE,true,featureManager);
         Movie movie1 = new Movie("tt6644200", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         Movie movie2 = new Movie("tt6857112", "movie2", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         List<Movie> movies = new ArrayList<>();
@@ -66,8 +57,8 @@ class MovieControllerIntegrationTest {
     }
 
     @Test
+    @AllDisabled(Features.class)
     public void shouldNotERetrieveMoviesWhenFeatureIsDisabled() throws Exception {
-        featureToggleUtility.toggleFeature(Features.MOVIE_SCHEDULE, false, featureManager);
         Movie movie1 = new Movie("tt6644200", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         Movie movie2 = new Movie("tt6857112", "movie2", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         List<Movie> movies = new ArrayList<>();
