@@ -110,7 +110,7 @@ public class ShowServiceTest {
         Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         when(movieGateway.getMovieFromId("movie_1")).thenReturn(movie);
         Slot pastSlot = new Slot("slot1", Time.valueOf(LocalTime.now().minusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
-        when(slotService.getSlotById(1)).thenReturn(pastSlot);
+        when(slotService.findById(1)).thenReturn(pastSlot);
         String expected = "Past slot not allowed";
 
         ShowException showException = assertThrows(ShowException.class, () -> showService.addShow(showRequest));
@@ -125,7 +125,7 @@ public class ShowServiceTest {
         Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         when(movieGateway.getMovieFromId("movie_1")).thenReturn(movie);
         Slot slot = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
-        when(slotService.getSlotById(1)).thenReturn(slot);
+        when(slotService.findById(1)).thenReturn(slot);
         Show show = new Show(Date.valueOf("2020-01-01"), slot, new BigDecimal("299.99"), "movie_1");
         when(showRepository.findBySlotIdAndDate(null, date)).thenReturn(show);
         String expected = "Show already added in this slot";
@@ -142,7 +142,7 @@ public class ShowServiceTest {
         Movie movie = new Movie("movie_1", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         when(movieGateway.getMovieFromId("movie_1")).thenReturn(movie);
         Slot slot = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
-        when(slotService.getSlotById(1)).thenReturn(slot);
+        when(slotService.findById(1)).thenReturn(slot);
 
         showService.addShow(showRequest);
 

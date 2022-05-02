@@ -46,7 +46,7 @@ public class ShowService {
 
         movieIdExist(request.getMovieId());
 
-        Slot slot = slotService.getSlotById(request.getSlotId());
+        Slot slot = slotService.findById(request.getSlotId());
         slotAlreadyExist(slot);
 
         notPastSlotOfCurrentDate(request.getDate(), slot);
