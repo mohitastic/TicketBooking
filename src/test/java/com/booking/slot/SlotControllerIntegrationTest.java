@@ -3,6 +3,7 @@ package com.booking.slot;
 import com.booking.App;
 import com.booking.slots.repository.Slot;
 import com.booking.slots.repository.SlotRepository;
+import com.booking.toggles.Features;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.togglz.junit5.AllDisabled;
+import org.togglz.junit5.AllEnabled;
+import org.togglz.testing.TestFeatureManager;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -45,7 +49,8 @@ public class SlotControllerIntegrationTest {
     }
 
     @Test
-    void shouldReturnAllAvailableSlots() throws Exception {
+    @AllEnabled(Features.class)
+    void shouldReturnAllAvailableSlotsWhenFeatureIsEnabled(TestFeatureManager testFeatureManager) throws Exception {
         final Slot slotOne = slotRepository.save(new Slot("slot1", Time.valueOf("09:00:00"), Time.valueOf("12:30:00")));
         final Slot slotTwo = slotRepository.save(new Slot("slot2", Time.valueOf("13:30:00"), Time.valueOf("17:00:00")));
         Date date = Date.valueOf(LocalDate.now().plusDays(1));
@@ -58,9 +63,18 @@ public class SlotControllerIntegrationTest {
     }
 
     @Test
-    void shouldReturnBadRequestWhenPastDateIsGiven() throws Exception {
+    @AllEnabled(Features.class)
+    void shouldReturnBadRequestWhenPastDateIsGivenWhenFeatureIsEnabled() throws Exception {
         mockMvc.perform(get("/slots?date=2022-04-21"))
                 .andExpect(status().isBadRequest());
 
+    }
+
+    @Test
+    @AllDisabled(Features.class)
+    void shouldNotReturnSlotsWhenFeatureIsDisabled(TestFeatureManager testFeatureManager) throws Exception {
+        Date date = Date.valueOf(LocalDate.now().plusDays(1));
+        mockMvc.perform(get("/slots?date=" + date))
+                .andExpect(status().isBadRequest());
     }
 }

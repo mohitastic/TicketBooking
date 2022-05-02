@@ -5,6 +5,8 @@ import com.booking.handlers.models.ErrorResponse;
 import com.booking.slots.repository.Slot;
 import com.booking.slots.repository.SlotService;
 import com.booking.slots.repository.view.model.SlotResponse;
+import com.booking.toggles.FeatureAssociation;
+import com.booking.toggles.Features;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -29,6 +31,7 @@ public class SlotController {
         this.slotService = slotService;
     }
 
+    @FeatureAssociation(value = Features.MOVIE_SCHEDULE)
     @GetMapping
     @ApiOperation(value = "Fetch available slots for given date")
     @ResponseStatus(code = HttpStatus.OK)
