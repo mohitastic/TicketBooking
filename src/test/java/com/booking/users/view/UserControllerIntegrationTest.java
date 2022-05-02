@@ -68,7 +68,8 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void shouldChangePasswordSuccessfully() throws Exception {
+    @AllEnabled(Features.class)
+    void shouldChangePasswordSuccessfullyWhenFeatureIsEnabled() throws Exception {
         userRepository.save(new User("test-user", "password", CUSTOMER));
         final String bodyJson = "{" +
                 "\"oldPassword\": \"password\"," +
@@ -86,10 +87,30 @@ class UserControllerIntegrationTest {
     }
 
     @Test
+    @AllEnabled(Features.class)
     void shouldChangePasswordUnSuccessfully() throws Exception {
         userRepository.save(new User("test-user", "password", CUSTOMER));
         final String bodyJson = "{" +
                 "\"oldPassword\": \"password1\"," +
+                "\"newPassword\": \"Password@1\"," +
+                "\"confirmNewPassword\": \"Password@1\"" +
+                "}";
+
+        mockMvc.perform(
+                        put("/changePassword")
+                                .with(httpBasic("test-user", "password"))
+                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .content(bodyJson)
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @AllDisabled(Features.class)
+    void shouldNotChangePasswordWhenFeatureIsDisabled() throws Exception {
+        userRepository.save(new User("test-user", "password", CUSTOMER));
+        final String bodyJson = "{" +
+                "\"oldPassword\": \"password\"," +
                 "\"newPassword\": \"Password@1\"," +
                 "\"confirmNewPassword\": \"Password@1\"" +
                 "}";

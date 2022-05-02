@@ -50,6 +50,7 @@ public class UserController {
         return userDetails;
     }
 
+    @FeatureAssociation(value = Features.CHANGE_PASSWORD)
     @PutMapping("/changePassword")
     void updatePassword(Principal principal, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) throws ChangePasswordException {
         System.out.println("change password request "+ changePasswordRequest.getOldPassword());
