@@ -33,6 +33,10 @@ fileignoreconfig:
   checksum: 2a3f6c3bffd9295dafa549b96147f041a2edda9f875d4302a9da8ad684508dae
 - filename: src/main/java/com/booking/users/repository/model/User.java
   checksum: 4af327ecfc3cca592db1176899b040b9cfdb9c2ce234f2cac137166058c81fbe
+- filename: src/main/resources/db/migration/V1.11__AddColumnRoleToUserTable.sql
+  checksum: 78031f9234ebff61a36bd818a8fc4c707cd4e823bbc075d9211aec21db360747
+- filename: src/main/resources/db/migration/V1.12__PopulateRoleColumnInUserTable.sql
+  checksum: 2151dec5ae13d4296a5470f15817d3e4d8c06456e562c07d8b27d2a4ef7562f5
 
 
 

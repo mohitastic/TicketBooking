@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Date;
 import java.util.Optional;
 
+import static com.booking.users.Role.Code.CUSTOMER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -95,7 +96,7 @@ public class UserSignUpServiceTest {
     @Test
     void shouldFailWhenUserEntersFutureDateOfBirth() {
         String username = "test-user";
-        User user = new User(username, "correct-password");
+        User user = new User(username, "correct-password", CUSTOMER);
         Date date = Date.valueOf(java.time.LocalDate.now().plusDays(2));
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abcde", "test-userrr", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
@@ -111,7 +112,7 @@ public class UserSignUpServiceTest {
     void shouldFailWhenUserNameAlreadyExists() {
         Date date = Date.valueOf("1996-04-19");
         String username = "test-user";
-        User user = new User(username, "correct-password");
+        User user = new User(username, "correct-password", CUSTOMER);
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
         String expectedExceptionMessage = "User name already exists";
@@ -126,7 +127,7 @@ public class UserSignUpServiceTest {
     @Test
     void shouldFailWhenPhoneNumberAlreadyExists() {
         Date date = Date.valueOf("1996-04-19");
-        UserDetail userDetails = new UserDetail("abc", date, "bac@gmail.com", "1234567890", new User("test", "Password@1"));
+        UserDetail userDetails = new UserDetail("abc", date, "bac@gmail.com", "1234567890", new User("test", "Password@1", CUSTOMER));
         mockUserDetailsRepository.save(userDetails);
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
         UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);

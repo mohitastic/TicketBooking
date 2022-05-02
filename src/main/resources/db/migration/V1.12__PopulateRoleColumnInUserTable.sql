@@ -1,0 +1,2 @@
+UPDATE USERTABLE SET ROLE = 'ADMIN' WHERE USERNAME IN ('seed-user-1', 'seed-user-2');
+UPDATE USERTABLE SET ROLE = 'CUSTOMER' WHERE USERNAME NOT IN ('seed-user-1', 'seed-user-2');

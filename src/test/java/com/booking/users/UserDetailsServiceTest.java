@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Date;
 import java.util.Optional;
 
+import static com.booking.users.Role.Code.CUSTOMER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,7 +30,7 @@ class UserDetailsServiceTest {
     @Test
     void shouldBeAbleToViewUserDetails() throws UserDetailNotFoundException {
         Date date = Date.valueOf("1996-04-19");
-        User user = new User(1L,"abc", "Password@1");
+        User user = new User(1L,"abc", "Password@1", CUSTOMER);
         UserDetail userDetails = new UserDetail("abc", date, "bac@email.com", "1234567890", user);
         mockUserRepository.save(user);
         mockUserDetailsRepository.save(userDetails);

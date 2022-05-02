@@ -1,10 +1,9 @@
 package com.booking.users.view;
 
 import com.booking.App;
-import com.booking.exceptions.ChangePasswordException;
 import com.booking.users.repository.UserDetailsRepository;
-import com.booking.users.repository.model.User;
 import com.booking.users.repository.UserRepository;
+import com.booking.users.repository.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.booking.users.Role.Code.CUSTOMER;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,7 +49,7 @@ class UserControllerIntegrationTest {
 
     @Test
     public void shouldLoginSuccessfully() throws Exception {
-        userRepository.save(new User("test-user", "password"));
+        userRepository.save(new User("test-user", "password", CUSTOMER));
         mockMvc.perform(
                         get("/login")
                                 .with(httpBasic("test-user", "password"))
@@ -67,7 +65,7 @@ class UserControllerIntegrationTest {
 
     @Test
     void shouldChangePasswordSuccessfully() throws Exception {
-        userRepository.save(new User("test-user", "password"));
+        userRepository.save(new User("test-user", "password", CUSTOMER));
         final String bodyJson = "{" +
                 "\"oldPassword\": \"password\"," +
                 "\"newPassword\": \"Password@1\"," +
@@ -85,7 +83,7 @@ class UserControllerIntegrationTest {
 
     @Test
     void shouldChangePasswordUnSuccessfully() throws Exception {
-        userRepository.save(new User("test-user", "password"));
+        userRepository.save(new User("test-user", "password", CUSTOMER));
         final String bodyJson = "{" +
                 "\"oldPassword\": \"password1\"," +
                 "\"newPassword\": \"Password@1\"," +

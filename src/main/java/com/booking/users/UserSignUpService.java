@@ -12,6 +12,8 @@ import java.sql.Date;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static com.booking.users.Role.Code.CUSTOMER;
+
 @Service
 public class UserSignUpService {
     private static  final String NAME_PATTERN = "^(?![\\s.]+$)[a-zA-Z\\s.]*$";
@@ -54,7 +56,7 @@ public class UserSignUpService {
         userAlreadyExists(user);
         Optional<UserDetail> userDetails = userDetailsRepository.findByPhoneNumber(phoneNumber);
         phoneNumberAlreadyExists(userDetails);
-        User savedUser = userRepository.save(new User(username, password));
+        User savedUser = userRepository.save(new User(username, password, CUSTOMER));
         userDetailsRepository.save(new UserDetail(name, dob, email, phoneNumber, savedUser));
     }
 

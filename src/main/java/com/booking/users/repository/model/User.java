@@ -26,18 +26,25 @@ public class User {
     @ApiModelProperty(name = "password", value = "Password of the user", required = true, example = "password", position = 2)
     private String password;
 
+    @NotBlank(message = "Role must be provided")
+    @Column(nullable = false)
+    private String role;
+
+
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
-    public User(Long id, String username, String password) {
+    public User(Long id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -58,6 +65,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
