@@ -1,19 +1,13 @@
 package com.booking.toggles;
 
 import com.booking.App;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.togglz.core.manager.FeatureManager;
 import org.togglz.junit5.AllDisabled;
 import org.togglz.junit5.AllEnabled;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = App.class)
 public class FeaturesTest {
