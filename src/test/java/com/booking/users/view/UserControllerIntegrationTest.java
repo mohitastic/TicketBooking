@@ -1,6 +1,8 @@
 package com.booking.users.view;
 
 import com.booking.App;
+import com.booking.exceptions.ChangePasswordException;
+import com.booking.toggles.Features;
 import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
@@ -14,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.togglz.junit5.AllDisabled;
+import org.togglz.junit5.AllEnabled;
 
 import static com.booking.users.Role.Code.CUSTOMER;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -100,7 +104,8 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void shouldSignUpSuccessfully() throws Exception {
+    @AllEnabled(Features.class)
+    void shouldSignUpSuccessfullyWhenFeatureIsEnabled() throws Exception {
         final String bodyJson = "{" +
                 "\"name\": \"user\"," +
                 "\"username\": \"user4\"," +
@@ -120,7 +125,8 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void shouldFailWhenTheRequestIsBad() throws Exception {
+    @AllEnabled(Features.class)
+    void shouldFailWhenTheRequestIsBadAndFeatureIsEnabled() throws Exception {
         final String bodyJson = "{" +
                 "\"name\": \"user4\"," +
                 "\"username\": \"user4\"," +
@@ -139,4 +145,24 @@ class UserControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @AllDisabled(Features.class)
+    void shouldNotSignUpSuccessfullyWhenFeatureIsDisabled() throws Exception {
+        final String bodyJson = "{" +
+                "\"name\": \"user\"," +
+                "\"username\": \"user4\"," +
+                "\"dob\": \"1996-04-19\"," +
+                "\"email\": \"user@email.com\"," +
+                "\"phoneNumber\": \"1234567899\"," +
+                "\"password\": \"Password@4\"," +
+                "\"confirmPassword\": \"Password@4\"" +
+                "}";
+
+        mockMvc.perform(
+                        post("/signup")
+                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .content(bodyJson)
+                )
+                .andExpect(status().isBadRequest());
+    }
 }

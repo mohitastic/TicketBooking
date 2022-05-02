@@ -5,6 +5,8 @@ import com.booking.exceptions.PatternDoesNotMatchException;
 import com.booking.exceptions.UserDetailNotFoundException;
 import com.booking.exceptions.UserSignUpException;
 import com.booking.handlers.models.ErrorResponse;
+import com.booking.toggles.FeatureAssociation;
+import com.booking.toggles.Features;
 import com.booking.users.ChangePasswordService;
 import com.booking.users.UserDetailService;
 import com.booking.users.UserSignUpService;
@@ -54,6 +56,7 @@ public class UserController {
         changePasswordService.execute(changePasswordRequest, principal.getName());
     }
 
+    @FeatureAssociation(value= Features.CUSTOMER_SIGN_UP)
     @PostMapping("/signup")
     @ApiOperation(value = "Create a new user")
     @ResponseStatus(code = HttpStatus.CREATED)
