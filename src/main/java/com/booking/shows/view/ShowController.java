@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.booking.users.Role.Code.ADMIN;
 
 @Api(tags = "Shows")
 @RestController
@@ -52,6 +55,7 @@ public class ShowController {
     }
 
     @FeatureAssociation(value = Features.MOVIE_SCHEDULE)
+    @Secured("ROLE_" + ADMIN)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "create new show")
     @ResponseStatus(code = HttpStatus.CREATED)

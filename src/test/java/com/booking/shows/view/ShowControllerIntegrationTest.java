@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.booking.users.Role.Code.ADMIN;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@WithMockUser
+@WithMockUser(roles = ADMIN)
 public class ShowControllerIntegrationTest {
 
     @Autowired
@@ -127,5 +128,21 @@ public class ShowControllerIntegrationTest {
                                 .content("{\"cost\":299.99,\"date\":\"" + date + "\",\"movieId\":\"movie_1\",\"slotId\":" + slots.get(0).getId() + "}")
                 )
                 .andExpect(status().isCreated());
+    }
+
+    @WithMockUser
+    @Test
+    void shouldNotAddShowSuccessfullyWhenUserIsNotAdminAndFeatureIsEnabled() throws Exception {
+        Date date = Date.valueOf(LocalDate.now());
+        Slot slotOne = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
+        slotRepository.save(slotOne);
+        List<Slot> slots = slotRepository.findAll();
+
+        mockMvc.perform(
+                        post("/shows")
+                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .content("{\"cost\":299.99,\"date\":\"" + date + "\",\"movieId\":\"movie_1\",\"slotId\":" + slots.get(0).getId() + "}")
+                )
+                .andExpect(status().isForbidden());
     }
 }
