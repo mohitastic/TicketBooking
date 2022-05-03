@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@WithMockUser(username = "testuser", password = "Password@2", roles = ADMIN)
+@WithMockUser(roles = ADMIN)
 class MovieControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
