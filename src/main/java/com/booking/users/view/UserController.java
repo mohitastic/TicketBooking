@@ -53,11 +53,11 @@ public class UserController {
     @FeatureAssociation(value = Features.CHANGE_PASSWORD)
     @PutMapping("/changePassword")
     void updatePassword(Principal principal, @Valid @RequestBody ChangePasswordRequest changePasswordRequest) throws ChangePasswordException {
-        System.out.println("change password request "+ changePasswordRequest.getOldPassword());
+        System.out.println("change password request " + changePasswordRequest.getOldPassword());
         changePasswordService.execute(changePasswordRequest, principal.getName());
     }
 
-    @FeatureAssociation(value= Features.CUSTOMER_SIGN_UP)
+    @FeatureAssociation(value = Features.CUSTOMER_SIGN_UP)
     @PostMapping("/signup")
     @ApiOperation(value = "Create a new user")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -69,17 +69,19 @@ public class UserController {
     void userSignUp(@Valid @RequestBody UserSignUpRequest userSignUpRequest) throws UserSignUpException, PatternDoesNotMatchException {
         userSignUpService.execute(userSignUpRequest);
     }
+
+    @FeatureAssociation(value = Features.VIEW_USER_PROFILE)
     @GetMapping("/userDetails")
     Map<String, Object> userDetails(@Valid @RequestParam(name = "username") String username) throws UserDetailNotFoundException {
         UserDetail userDetails = userDetailsService.fetch(username);
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String date = formatter.format(userDetails.getDob());
-        Map<String,Object> user = new HashMap<>();
-        user.put("name",userDetails.getName());
-        user.put("username",userDetails.getUser().getUsername());
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", userDetails.getName());
+        user.put("username", userDetails.getUser().getUsername());
         user.put("dob", date);
-        user.put("email",userDetails.getEmail());
-        user.put("phoneNumber",userDetails.getPhoneNumber());
+        user.put("email", userDetails.getEmail());
+        user.put("phoneNumber", userDetails.getPhoneNumber());
 
         return user;
     }
