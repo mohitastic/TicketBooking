@@ -36,7 +36,6 @@ import java.time.Duration;
 
 import static com.booking.shows.respository.Constants.MAX_NO_OF_SEATS_PER_BOOKING;
 import static com.booking.users.Role.Code.ADMIN;
-import static com.booking.users.Role.Code.CUSTOMER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -46,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@WithMockUser(username = "testuser", password = "Password@2", roles = ADMIN)
+@WithMockUser(roles = ADMIN)
 public class BookingControllerIntegrationTest {
 
     @Autowired
@@ -136,7 +135,7 @@ public class BookingControllerIntegrationTest {
         assertThat(bookingRepository.findAll().size(), is(1));
     }
 
-    @WithMockUser(username = "testuser", password = "Password@2", roles = CUSTOMER)
+    @WithMockUser
     @Test
     void should_not_book_when_user_is_not_admin() throws Exception {
         final String requestJson = "{" +

@@ -14,7 +14,7 @@ fileignoreconfig:
 - filename: src/test/java/com/booking/users/view/UserControllerIntegrationTest.java
   checksum: 1991a800a20faf4fc232a5af31ecf793b9653e23c8233498e474cb7a7045ad23
 - filename: src/test/java/com/booking/bookings/view/BookingControllerIntegrationTest.java
-  checksum: 5c6f4117b207505e79ecd6a2c95c3732995533fc891c03fce729e3864bbe27ed
+  checksum: ed10ad5893a414d550d31dd7df1ca6fc0e41e5e96d1def2263f7af6af341e497
 - filename: src/test/java/com/booking/movieGateway/DefaultMovieGatewayTest.java
   checksum: 57c50ae7a23e0f18cc3417f398d6872792ad6a713a335e7dc2e0086ad111db0d
 - filename: src/test/java/com/booking/shows/view/ShowControllerIntegrationTest.java
