@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 
+import static com.booking.users.Role.Code.ADMIN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@WithMockUser
+@WithMockUser(username = "testuser", password = "Password@2", roles = ADMIN)
 public class RevenueControllerIntegrationTest {
 
     @Autowired
@@ -93,6 +94,36 @@ public class RevenueControllerIntegrationTest {
         mockMvc.perform(get("/revenue?date=2020-01-01"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("850.00"));
+    }
+
+    @WithMockUser
+    @Test
+    void should_not_get_revenue_when_user_is_not_admin() throws Exception {
+        final var slotOne =
+                slotRepository.save(new Slot("Test slot one", Time.valueOf("09:30:00"), Time.valueOf("12:00:00")));
+        final var slotTwo =
+                slotRepository.save(new Slot("Test slot two", Time.valueOf("13:30:00"), Time.valueOf("16:00:00")));
+
+        final Show showOne =
+                showRepository.save(new Show(Date.valueOf("2020-01-01"), slotOne, BigDecimal.valueOf(200), "movie_1"));
+        final Show showTwo =
+                showRepository.save(new Show(Date.valueOf("2020-01-01"), slotTwo, BigDecimal.valueOf(150), "movie_1"));
+        final Show showThree =
+                showRepository.save(new Show(Date.valueOf("2020-01-02"), slotTwo, BigDecimal.valueOf(250), "movie_1"));
+        final var customer = customerRepository.save(new Customer("Name", "9999999999"));
+
+        bookingRepository.save(
+                new Booking(Date.valueOf("2019-12-31"), showOne, customer, 2, BigDecimal.valueOf(400))
+        );
+        bookingRepository.save(
+                new Booking(Date.valueOf("2019-12-31"), showTwo, customer, 3, BigDecimal.valueOf(450))
+        );
+        bookingRepository.save(
+                new Booking(Date.valueOf("2019-12-31"), showThree, customer, 1, BigDecimal.valueOf(250))
+        );
+
+        mockMvc.perform(get("/revenue?date=2020-01-01"))
+                .andExpect(status().isForbidden());
     }
 
     @Test

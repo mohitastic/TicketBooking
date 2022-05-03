@@ -8,14 +8,18 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+import static com.booking.users.Role.Code.ADMIN;
+
 @Api(tags = "Revenue")
 @RestController
+@Secured("ROLE_" + ADMIN)
 @RequestMapping("/revenue")
 public class RevenueController {
 

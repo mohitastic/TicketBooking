@@ -39,6 +39,10 @@ fileignoreconfig:
   checksum: 2151dec5ae13d4296a5470f15817d3e4d8c06456e562c07d8b27d2a4ef7562f5
 - filename: src/main/resources/db/migration/V1.13__AddColumnConstraintToRoleInUserTable.sql
   checksum: bb6af3cb654037895f5ee0e49d3ae1accfa367606494b8eff468f7bdeab09fa7
+- filename: src/test/java/com/booking/movie/view/MovieControllerIntegrationTest.java
+  checksum: a2aa6d464cd2446d7f76a359e56fcd744e260d2e85fa4a7a768495bec3bf19d5
+- filename: src/test/java/com/booking/revenue/view/RevenueControllerIntegrationTest.java
+  checksum: 50ac569e70724fce10ab89807fb0fceb47a1073810b71ba5867560f65830f018
 - filename: src/main/java/com/booking/users/UserPrincipalService.java
   checksum: 4451fd8bca1c50ba62ded0aa87c28fc26bb70a0bc064fc6f25c921a1684b7492
 - filename: src/test/java/com/booking/users/UserSignUpServiceTest.java
