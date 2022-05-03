@@ -33,12 +33,12 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
-import java.util.ArrayList;
 
 import static com.booking.shows.respository.Constants.MAX_NO_OF_SEATS_PER_BOOKING;
+import static com.booking.users.Role.Code.ADMIN;
+import static com.booking.users.Role.Code.CUSTOMER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@WithMockUser
+@WithMockUser(username = "testuser", password = "Password@2", roles = ADMIN)
 public class BookingControllerIntegrationTest {
 
     @Autowired
@@ -135,6 +135,23 @@ public class BookingControllerIntegrationTest {
         assertThat(customerRepository.findAll().size(), is(1));
         assertThat(bookingRepository.findAll().size(), is(1));
     }
+
+    @WithMockUser(username = "testuser", password = "Password@2", roles = CUSTOMER)
+    @Test
+    void should_not_book_when_user_is_not_admin() throws Exception {
+        final String requestJson = "{" +
+                "\"date\": \"2020-06-01\"," +
+                "\"showId\": " + showOne.getId() + "," +
+                "\"customer\": " + "{\"name\": \"Customer\", \"phoneNumber\": \"9922334455\"}," +
+                "\"noOfSeats\": 2" +
+                "}";
+
+        mockMvc.perform(post("/bookings/userCustomer")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                        .content(requestJson))
+                .andExpect(status().isForbidden());
+    }
+
 
     @Test
     public void should_save_booking_user_customer() throws Exception {

@@ -11,12 +11,16 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.booking.users.Role.Code.ADMIN;
+
 @Api(tags = "Bookings")
 @RestController
+@Secured("ROLE_" + ADMIN)
 @RequestMapping("/bookings")
 public class BookingController {
     private final BookingService bookingService;
@@ -55,9 +59,4 @@ public class BookingController {
         Booking booking = bookingService.bookUserCustomer(bookingRequest.getUsername(), bookingRequest.getShowId(), bookingRequest.getDate(), bookingRequest.getNoOfSeats());
         return booking.constructBookingConfirmation();
     }
-
-
-
-
-
 }
