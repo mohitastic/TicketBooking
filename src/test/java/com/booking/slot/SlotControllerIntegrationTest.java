@@ -22,6 +22,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 
+import static com.booking.users.Role.Code.ADMIN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@WithMockUser
+@WithMockUser(roles = ADMIN)
 public class SlotControllerIntegrationTest {
 
     @Autowired
@@ -60,6 +61,16 @@ public class SlotControllerIntegrationTest {
                 .andExpect(content().json(
                         "{\"slots\":[{\"id\":" + slotOne.getId() + ",\"name\":\"slot1\",\"startTime\":\"9:00 AM\",\"endTime\":\"12:30 PM\"}," +
                                 "{\"id\":" + slotTwo.getId() + ",\"name\":\"slot2\",\"startTime\":\"1:30 PM\",\"endTime\":\"5:00 PM\"}]}"));
+    }
+
+    @WithMockUser
+    @Test
+    @AllEnabled(Features.class)
+    void shouldNotReturnAllAvailableSlotsWhenUserIsNotAdminAndFeatureIsEnabled() throws Exception {
+        Date date = Date.valueOf(LocalDate.now().plusDays(1));
+
+        mockMvc.perform(get("/slots?date=" + date))
+                .andExpect(status().isForbidden());
     }
 
     @Test

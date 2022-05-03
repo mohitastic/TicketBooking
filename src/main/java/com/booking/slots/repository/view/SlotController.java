@@ -13,14 +13,18 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.List;
 
+import static com.booking.users.Role.Code.ADMIN;
+
 @Api(tags = "Slots")
 @RestController
+@Secured("ROLE_" + ADMIN)
 @RequestMapping("/slots")
 public class SlotController {
 

@@ -132,6 +132,7 @@ public class ShowControllerIntegrationTest {
 
     @WithMockUser
     @Test
+    @AllEnabled(Features.class)
     void shouldNotAddShowSuccessfullyWhenUserIsNotAdminAndFeatureIsEnabled() throws Exception {
         Date date = Date.valueOf(LocalDate.now());
         Slot slotOne = new Slot("slot1", Time.valueOf(LocalTime.now().plusMinutes(5)), Time.valueOf(LocalTime.now().plusMinutes(20)));
