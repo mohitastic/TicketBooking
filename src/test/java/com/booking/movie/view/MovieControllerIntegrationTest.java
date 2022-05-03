@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.booking.users.Role.Code.ADMIN;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@WithMockUser
+@WithMockUser(username = "testuser", password = "Password@2", roles = ADMIN)
 class MovieControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -56,9 +57,25 @@ class MovieControllerIntegrationTest {
                         "{\"id\":\"tt6857112\",\"name\":\"movie2\",\"duration\":\"1h 30m\",\"plot\":\"description\",\"posterLink\":\"link\",\"imdbRating\":\"6.3\"}]"));
     }
 
+    @AllEnabled(Features.class)
+    @WithMockUser
+    @Test
+    void shouldNotRetrieveAllExistingMoviesWhenUserIsNotAdminAndFeatureIsEnabled() throws Exception {
+        Movie movie1 = new Movie("tt6644200", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
+        Movie movie2 = new Movie("tt6857112", "movie2", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
+        List<Movie> movies = new ArrayList<>();
+        movies.add(movie1);
+        movies.add(movie2);
+
+        when(movieService.getAllMovies()).thenReturn(movies);
+
+        mockMvc.perform(get("/movies"))
+                .andExpect(status().isForbidden());
+    }
+
     @Test
     @AllDisabled(Features.class)
-    public void shouldNotERetrieveMoviesWhenFeatureIsDisabled() throws Exception {
+    public void shouldNotRetrieveMoviesWhenFeatureIsDisabled() throws Exception {
         Movie movie1 = new Movie("tt6644200", "movie1", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         Movie movie2 = new Movie("tt6857112", "movie2", Duration.ofHours(1).plusMinutes(30), "description", "link", "6.3");
         List<Movie> movies = new ArrayList<>();
