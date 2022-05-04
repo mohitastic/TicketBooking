@@ -9,6 +9,7 @@ import com.booking.toggles.FeatureAssociation;
 import com.booking.toggles.Features;
 import com.booking.users.ChangePasswordService;
 import com.booking.users.UserDetailService;
+import com.booking.users.UserService;
 import com.booking.users.UserSignUpService;
 import com.booking.users.repository.model.UserDetail;
 import com.booking.users.view.model.ChangePasswordRequest;
@@ -34,12 +35,14 @@ public class UserController {
     private final ChangePasswordService changePasswordService;
     private final UserSignUpService userSignUpService;
     private final UserDetailService userDetailsService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(ChangePasswordService changePasswordService, UserSignUpService userSignUpService, UserDetailService userDetailsService) {
+    public UserController(ChangePasswordService changePasswordService, UserSignUpService userSignUpService, UserDetailService userDetailsService, UserService userService) {
         this.changePasswordService = changePasswordService;
         this.userSignUpService = userSignUpService;
         this.userDetailsService = userDetailsService;
+        this.userService = userService;
     }
 
     @GetMapping("/login")
@@ -47,6 +50,8 @@ public class UserController {
         String username = principal.getName();
         Map<String, Object> userDetails = new HashMap<>();
         userDetails.put("username", username);
+        String userRole = userService.fetchRole(username);
+        userDetails.put("role", userRole);
         return userDetails;
     }
 
