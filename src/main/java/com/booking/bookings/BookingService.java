@@ -11,7 +11,6 @@ import com.booking.shows.respository.ShowRepository;
 import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
-import com.booking.users.repository.model.UserDetail;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,14 +28,12 @@ public class BookingService {
     private final CustomerRepository customerRepository;
     private final ShowRepository showRepository;
     private final UserRepository userRepository;
-    private final UserDetailsRepository userDetailsRepository;
 
-    public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, UserRepository userRepository,ShowRepository showRepository, UserDetailsRepository userDetailsRepository) {
+    public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, UserRepository userRepository,ShowRepository showRepository) {
         this.bookingRepository = bookingRepository;
         this.customerRepository = customerRepository;
         this.showRepository = showRepository;
         this.userRepository = userRepository;
-        this.userDetailsRepository = userDetailsRepository;
     }
 
     public Booking bookWalkInCustomer(Customer customer, Long showId, Date bookingDate, int noOfSeats) throws NoSeatAvailableException, PatternDoesNotMatchException {
@@ -62,14 +59,12 @@ public class BookingService {
         }
 
         User user;
-        System.out.println("FAILING");
         if(userRepository.findByUsername(username).isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }else {
-            System.out.println("INSIDE ELSE");
             user = userRepository.findByUsername(username).get();
         }
-        UserDetail userDetail = userDetailsRepository.findByUserId(user.getId()).get();
+
 
         BigDecimal amountPaid = show.costFor(noOfSeats);
         return bookingRepository.save(new Booking(bookingDate, show, user, noOfSeats, amountPaid));

@@ -9,11 +9,8 @@ import com.booking.exceptions.PatternDoesNotMatchException;
 import com.booking.shows.respository.Show;
 import com.booking.shows.respository.ShowRepository;
 import com.booking.slots.repository.Slot;
-import com.booking.users.Role;
-import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
-import com.booking.users.repository.model.UserDetail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,11 +36,9 @@ public class BookingServiceTest {
     private Show show;
     private User user;
     private Customer customer;
-    private UserDetail userDetail;
     private CustomerRepository customerRepository;
     private ShowRepository showRepository;
     private UserRepository userRepository;
-    private UserDetailsRepository userDetailsRepository;
 
     @BeforeEach
     public void beforeEach() {
@@ -51,14 +46,12 @@ public class BookingServiceTest {
         customerRepository = mock(CustomerRepository.class);
         showRepository = mock(ShowRepository.class);
         userRepository = mock(UserRepository.class);
-        userDetailsRepository = mock(UserDetailsRepository.class);
         bookingDate = Date.valueOf("2020-06-01");
         Slot slot = new Slot("13:00-16:00", Time.valueOf("13:00:00"), Time.valueOf("16:00:00"));
         show = new Show(bookingDate, slot, BigDecimal.valueOf(250), "1");
         customer = new Customer("Customer name", "9090909090");
         user = new User(1L,"testUser","foobar", CUSTOMER);
-        userDetail = new UserDetail("John",Date.valueOf("2022-04-08"),"abc@gmail.com","9843890977",user);
-        bookingService = new BookingService(bookingRepository, customerRepository,userRepository, showRepository, userDetailsRepository);
+        bookingService = new BookingService(bookingRepository, customerRepository,userRepository, showRepository);
     }
 
     @Test
@@ -81,7 +74,6 @@ public class BookingServiceTest {
         Booking booking = new Booking(bookingDate, show, user, noOfSeats, BigDecimal.valueOf(500));
         when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.of(show));
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-        when(userDetailsRepository.findByUserId(user.getId())).thenReturn(Optional.of(userDetail));
         Booking mockBooking = mock(Booking.class);
         when(bookingRepository.save(booking)).thenReturn(mockBooking);
 
