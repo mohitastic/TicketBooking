@@ -6,6 +6,11 @@ import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
 import com.booking.users.repository.model.UserDetail;
 import com.booking.users.view.model.UserSignUpRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -15,19 +20,26 @@ import java.util.regex.Pattern;
 import static com.booking.users.Role.Code.CUSTOMER;
 
 @Service
+@Configurable
 public class UserSignUpService {
     private static  final String NAME_PATTERN = "^(?![\\s.]+$)[a-zA-Z\\s.]*$";
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
     private static final String PHONE_NUMBER_PATTERN = "^[1-9]([0-9]{9})$";
     private static final String EMAIL_ADDRESS_PATTERN = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-    private UserRepository userRepository;
-    private UserDetailsRepository userDetailsRepository;
-    public UserSignUpService(UserRepository userRepository, UserDetailsRepository userDetailsRepository) {
+    private static final Date TODAY_DATE  = Date.valueOf(String.valueOf(java.time.LocalDate.now()));
+    private final UserRepository userRepository;
+    private final UserDetailsRepository userDetailsRepository;
+
+    @Autowired
+    @Qualifier("bCryptPasswordEncoder")
+    private final PasswordEncoder passwordEncoder;
+
+    public UserSignUpService(UserRepository userRepository, UserDetailsRepository userDetailsRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userDetailsRepository = userDetailsRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-    private static final Date TODAY_DATE  = Date.valueOf(String.valueOf(java.time.LocalDate.now()));
 
     public void execute(UserSignUpRequest userSignUpRequest) throws UserSignUpException, PatternDoesNotMatchException {
         String name = userSignUpRequest.getName();
@@ -54,9 +66,12 @@ public class UserSignUpService {
 
         Optional<User> user = userRepository.findByUsername(username);
         userAlreadyExists(user);
+
         Optional<UserDetail> userDetails = userDetailsRepository.findByPhoneNumber(phoneNumber);
         phoneNumberAlreadyExists(userDetails);
-        User savedUser = userRepository.save(new User(username, password, CUSTOMER));
+
+        String encodedPassword = passwordEncoder.encode(password);
+        User savedUser = userRepository.save(new User(username, encodedPassword, CUSTOMER));
         userDetailsRepository.save(new UserDetail(name, dob, email, phoneNumber, savedUser));
     }
 

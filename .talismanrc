@@ -4,9 +4,9 @@ fileignoreconfig:
 - filename: scripts/test_deployment.sh
   checksum: d27bec4ba2b457de4045a468a7594c9f8c209a799e684f9d2afb1072303666ee
 - filename: src/test/java/com/booking/users/ChangePasswordServiceTest.java
-  checksum: 7e376a298b2ee07d932302db11d4da598dd543de5f9c5cb6c9a28c74b17d3b86
+  checksum: 884e934bdf246c0647562687eb91933118be515521a85184d0dd8519d04afe6c
 - filename: src/main/java/com/booking/users/ChangePasswordService.java
-  checksum: f2a8c2588388e1e7e106f47c52503d77d56729f891b20355e37dd0e84dfca46d
+  checksum: cd9c1a733de2c7767ae68e5fd1484819684e1008f9f4e597aba039bfc92680bf
 - filename: src/main/java/com/booking/users/view/model/ChangePasswordRequest.java
   checksum: 9fa4777eac5287c96d680fe460408318e8cc6884af861afd9c833f7b61b37a58
 - filename: src/main/java/com/booking/users/view/UserController.java
@@ -26,19 +26,24 @@ fileignoreconfig:
 - filename: src/main/java/com/booking/users/view/model/UserSignUpRequest.java
   checksum: e7ae2b389e33936c61f351113be592bf1dc9aa5cd3e3d131abada8f54d8a79f1
 - filename: src/main/java/com/booking/users/UserSignUpService.java
-  checksum: 4fa4e44f9d7d0368a435f826ef7b9d13f22c5f063d6ce0fcb217563dd000ca75
+  checksum: 0c154f0031602eaded1d46ac5dc9f7db08001ec208a8e53ad5f32381e10c788a
 - filename: src/main/resources/db/migration/V1.10__CreateUserDetailsTable.sql
   checksum: 8da0a3ccdb2fafd4cf4597d867851f72257d0686409d6c3f37228b1c1cf2f46a
 - filename: src/test/java/com/booking/users/view/UserSignUpControllerIntegrationTest.java
   checksum: 2a3f6c3bffd9295dafa549b96147f041a2edda9f875d4302a9da8ad684508dae
 - filename: src/main/java/com/booking/users/repository/model/User.java
-  checksum: 4af327ecfc3cca592db1176899b040b9cfdb9c2ce234f2cac137166058c81fbe
+  checksum: 66b3a488d6e877b04ddac45b0ca49c58d015a3e4cd4d44ad218a982cff392cce
 - filename: src/main/resources/db/migration/V1.11__AddColumnRoleToUserTable.sql
   checksum: 78031f9234ebff61a36bd818a8fc4c707cd4e823bbc075d9211aec21db360747
 - filename: src/main/resources/db/migration/V1.12__PopulateRoleColumnInUserTable.sql
   checksum: 2151dec5ae13d4296a5470f15817d3e4d8c06456e562c07d8b27d2a4ef7562f5
 - filename: src/main/resources/db/migration/V1.13__AddColumnConstraintToRoleInUserTable.sql
   checksum: bb6af3cb654037895f5ee0e49d3ae1accfa367606494b8eff468f7bdeab09fa7
+- filename: src/main/java/com/booking/users/UserPrincipalService.java
+  checksum: 4451fd8bca1c50ba62ded0aa87c28fc26bb70a0bc064fc6f25c921a1684b7492
+- filename: src/test/java/com/booking/users/UserSignUpServiceTest.java
+  checksum: e0e51826d64e2b3db965e366a9e106b3057a2c460c003e06948cdab4dc6d6986
+
 
 
 

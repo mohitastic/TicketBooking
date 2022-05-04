@@ -4,18 +4,29 @@ import com.booking.exceptions.ChangePasswordException;
 import com.booking.users.repository.UserRepository;
 import com.booking.users.repository.model.User;
 import com.booking.users.view.model.ChangePasswordRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 import java.util.regex.Pattern;
 
 @Service
+@Configurable
 public class ChangePasswordService {
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,64}$";
     private final UserRepository userRepository;
 
-    public ChangePasswordService(UserRepository userRepository) {
+    @Autowired
+    @Qualifier("bCryptPasswordEncoder")
+    private PasswordEncoder passwordEncoder;
+
+    public ChangePasswordService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void execute(ChangePasswordRequest changePasswordRequest, String userName) throws ChangePasswordException {
@@ -32,14 +43,17 @@ public class ChangePasswordService {
 
         oldPasswordNotMatchesWithUserPassword(user, changePasswordRequest);
 
-        user.setPassword(newPassword);
+        String newEncodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(newEncodedPassword);
 
         userRepository.save(user);
 
     }
 
     private void oldPasswordNotMatchesWithUserPassword(User user, ChangePasswordRequest changePasswordRequest) throws ChangePasswordException {
-        if (!user.getPassword().equals(changePasswordRequest.getOldPassword())) {
+        String oldPassword = changePasswordRequest.getOldPassword();
+        String userPassword = user.getPassword();
+        if (!passwordEncoder.matches(oldPassword, userPassword)) {
             throw new ChangePasswordException("Old password is wrong");
         }
     }

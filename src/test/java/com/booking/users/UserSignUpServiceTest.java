@@ -9,6 +9,7 @@ import com.booking.users.repository.model.UserDetail;
 import com.booking.users.view.model.UserSignUpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.Date;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class UserSignUpServiceTest {
     void shouldHaveValuesForAllFieldsInTheSignUp() {
         Date date = Date.valueOf("1996-04-19");
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "The fields cannot be empty.";
 
         UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
@@ -42,7 +43,7 @@ public class UserSignUpServiceTest {
     void shouldFailWhenPasswordDoesNotMatchConfirmPassword() {
         Date date = Date.valueOf("1996-04-19");
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "1234567890", "Password@1", "Password@2");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "Password does not match Confirm Password";
 
         UserSignUpException userSignUpException = assertThrows(UserSignUpException.class, () -> userSignUpService.execute(userSignUpRequest));
@@ -53,7 +54,7 @@ public class UserSignUpServiceTest {
     void shouldFailWhenNamePatternIsNotFollowed() {
         Date date = Date.valueOf("1996-04-19");
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc12", "abc", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "Name does not match the pattern";
 
         PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
@@ -64,7 +65,7 @@ public class UserSignUpServiceTest {
     void shouldFailWhenPasswordPatternIsNotFollowed() {
         Date date = Date.valueOf("2020-04-19");
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "1234567890", "password@1", "password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "Password does not match the pattern";
 
         PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
@@ -75,7 +76,7 @@ public class UserSignUpServiceTest {
     void shouldFailWhenThePhoneNumberDoesNotHaveTenDigits() {
         Date date = Date.valueOf("1996-04-19");
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "123456789", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "Phone number is not valid";
 
         PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
@@ -86,7 +87,7 @@ public class UserSignUpServiceTest {
     void shouldFailWhenTheEmailIsInvalid() {
         Date date = Date.valueOf("1996-04-19");
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bacgmail@.com", "1234567890", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "Email address is not valid";
 
         PatternDoesNotMatchException patternDoesNotMatchException = assertThrows(PatternDoesNotMatchException.class, () -> userSignUpService.execute(userSignUpRequest));
@@ -99,7 +100,7 @@ public class UserSignUpServiceTest {
         User user = new User(username, "correct-password", CUSTOMER);
         Date date = Date.valueOf(java.time.LocalDate.now().plusDays(2));
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abcde", "test-userrr", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "Invalid Date Of Birth";
 
         when(mockUserRepository.findByUsername(username)).thenReturn(Optional.ofNullable(user));
@@ -114,7 +115,7 @@ public class UserSignUpServiceTest {
         String username = "test-user";
         User user = new User(username, "correct-password", CUSTOMER);
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "User name already exists";
 
         when(mockUserRepository.findByUsername(username)).thenReturn(Optional.ofNullable(user));
@@ -130,7 +131,7 @@ public class UserSignUpServiceTest {
         UserDetail userDetails = new UserDetail("abc", date, "bac@gmail.com", "1234567890", new User("test", "Password@1", CUSTOMER));
         mockUserDetailsRepository.save(userDetails);
         UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "test-user", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository, new BCryptPasswordEncoder());
         String expectedExceptionMessage = "Phone Number already exists";
 
         when(mockUserDetailsRepository.findByPhoneNumber("1234567890")).thenReturn(Optional.ofNullable(userDetails));
@@ -143,8 +144,10 @@ public class UserSignUpServiceTest {
     @Test
     void shouldPassWhenSignUpIsSuccessful() {
         Date date = Date.valueOf("1996-04-19");
-        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "1234567890", "Password@1", "Password@1");
-        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository);
+        String password = "Password@1";
+        System.out.println(password);
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest("abc", "abc", date, "bac@gmail.com", "1234567890", password, password);
+        UserSignUpService userSignUpService = new UserSignUpService(mockUserRepository, mockUserDetailsRepository,new BCryptPasswordEncoder());
 
         when(mockUserRepository.findByUsername("abc")).thenReturn(Optional.ofNullable(null));
 
