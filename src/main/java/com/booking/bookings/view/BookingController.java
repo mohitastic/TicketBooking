@@ -20,7 +20,6 @@ import static com.booking.users.Role.Code.ADMIN;
 
 @Api(tags = "Bookings")
 @RestController
-@Secured("ROLE_" + ADMIN)
 @RequestMapping("/bookings")
 public class BookingController {
     private final BookingService bookingService;
@@ -30,6 +29,7 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
+    @Secured("ROLE_" + ADMIN)
     @PostMapping("/walkInCustomer")
     @ApiOperation(value = "Create a booking for walk in customer")
     @ResponseStatus(code = HttpStatus.CREATED)

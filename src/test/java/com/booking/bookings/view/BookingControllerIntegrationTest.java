@@ -145,7 +145,7 @@ public class BookingControllerIntegrationTest {
                 "\"noOfSeats\": 2" +
                 "}";
 
-        mockMvc.perform(post("/bookings/userCustomer")
+        mockMvc.perform(post("/bookings/walkInCustomer")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                         .content(requestJson))
                 .andExpect(status().isForbidden());
