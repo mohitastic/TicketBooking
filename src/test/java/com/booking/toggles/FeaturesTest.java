@@ -18,7 +18,6 @@ public class FeaturesTest {
     void allEnabled() {
         assertTrue(Features.MOVIE_SCHEDULE.isActive());
         assertTrue(Features.VIEW_USER_PROFILE.isActive());
-        assertTrue(Features.CUSTOMER_SIGN_UP.isActive());
         assertTrue(Features.CHANGE_PASSWORD.isActive());
     }
 
@@ -27,7 +26,6 @@ public class FeaturesTest {
     void allDisabled() {
         assertFalse(Features.MOVIE_SCHEDULE.isActive());
         assertFalse(Features.VIEW_USER_PROFILE.isActive());
-        assertFalse(Features.CUSTOMER_SIGN_UP.isActive());
         assertFalse(Features.CHANGE_PASSWORD.isActive());
     }
 }

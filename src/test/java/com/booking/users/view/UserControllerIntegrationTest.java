@@ -132,7 +132,7 @@ class UserControllerIntegrationTest {
 
     @Test
     @AllEnabled(Features.class)
-    void shouldSignUpSuccessfullyWhenFeatureIsEnabled() throws Exception {
+    void shouldSignUpSuccessfully() throws Exception {
         final String bodyJson = "{" +
                 "\"name\": \"user\"," +
                 "\"username\": \"user4\"," +
@@ -153,7 +153,7 @@ class UserControllerIntegrationTest {
 
     @Test
     @AllEnabled(Features.class)
-    void shouldFailWhenTheRequestIsBadAndFeatureIsEnabled() throws Exception {
+    void shouldFailWhenTheRequestIsBad() throws Exception {
         final String bodyJson = "{" +
                 "\"name\": \"user4\"," +
                 "\"username\": \"user4\"," +
@@ -196,25 +196,5 @@ class UserControllerIntegrationTest {
                                 .with(httpBasic("test-user", "Password@1"))
                 )
                 .andExpect(status().isNotFound());
-    }
-    @Test
-    @AllDisabled(Features.class)
-    void shouldNotSignUpSuccessfullyWhenFeatureIsDisabled() throws Exception {
-        final String bodyJson = "{" +
-                "\"name\": \"user\"," +
-                "\"username\": \"user4\"," +
-                "\"dob\": \"1996-04-19\"," +
-                "\"email\": \"user@email.com\"," +
-                "\"phoneNumber\": \"1234567899\"," +
-                "\"password\": \"Password@4\"," +
-                "\"confirmPassword\": \"Password@4\"" +
-                "}";
-
-        mockMvc.perform(
-                        post("/signup")
-                                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                                .content(bodyJson)
-                )
-                .andExpect(status().isBadRequest());
     }
 }

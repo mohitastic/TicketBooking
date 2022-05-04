@@ -9,9 +9,6 @@ public enum Features implements Feature {
     @Label("Movie schedule Feature")
     MOVIE_SCHEDULE,
 
-    @Label("Customer sign up Feature")
-    CUSTOMER_SIGN_UP,
-
     @Label("Change password Feature")
     CHANGE_PASSWORD,
 
