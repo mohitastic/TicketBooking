@@ -3,7 +3,11 @@ package com.booking.bookings.repository;
 import com.booking.bookings.view.BookingConfirmationResponse;
 import com.booking.customers.repository.Customer;
 import com.booking.shows.respository.Show;
+import com.booking.users.repository.UserDetailsRepository;
+import com.booking.users.repository.model.User;
+import com.booking.users.repository.model.UserDetail;
 import com.booking.utilities.serializers.date.DateSerializer;
+import com.booking.users.UserDetailService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -41,7 +45,6 @@ public class Booking {
     @OneToOne
     @JoinColumn(name = "customer_id")
     @JsonIgnore
-    @NotNull(message = "Customer must be provided")
     private Customer customer;
 
     @Column(name = "no_of_seats", nullable = false)
@@ -58,6 +61,11 @@ public class Booking {
     @ApiModelProperty(name = "amount paid", value = "Amount paid for seats", required = true, example = "300.44", position = 4)
     private BigDecimal amountPaid;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
     public Booking(Date date, Show show, Customer customer, Integer noOfSeats, BigDecimal amountPaid) {
         this.date = date;
         this.show = show;
@@ -66,18 +74,42 @@ public class Booking {
         this.amountPaid = amountPaid;
     }
 
+
+
     public Booking() {
     }
 
+    public Booking(Date date, Show show, User user, int noOfSeats, BigDecimal amountPaid) {
+        this.date = date;
+        this.show = show;
+        this.user = user;
+        this.noOfSeats = noOfSeats;
+        this.amountPaid = amountPaid;
+        System.out.println("Inside BOOKING ");
+    }
+
+
+
     public BookingConfirmationResponse constructBookingConfirmation() {
+        if(customer!=null) {
+            return new BookingConfirmationResponse(
+                    id,
+                    customer.getName(),
+                    show.getDate(),
+                    show.getSlot().getStartTime(),
+                    amountPaid,
+                    noOfSeats
+            );
+        }
+
         return new BookingConfirmationResponse(
                 id,
-                customer.getName(),
+                user.getUsername(),
                 show.getDate(),
                 show.getSlot().getStartTime(),
                 amountPaid,
-                noOfSeats
-        );
+                noOfSeats);
+
     }
 
     public Long getId() {

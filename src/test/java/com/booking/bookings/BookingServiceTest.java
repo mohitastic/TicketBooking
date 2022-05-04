@@ -9,6 +9,11 @@ import com.booking.exceptions.PatternDoesNotMatchException;
 import com.booking.shows.respository.Show;
 import com.booking.shows.respository.ShowRepository;
 import com.booking.slots.repository.Slot;
+import com.booking.users.Role;
+import com.booking.users.repository.UserDetailsRepository;
+import com.booking.users.repository.UserRepository;
+import com.booking.users.repository.model.User;
+import com.booking.users.repository.model.UserDetail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,6 +24,7 @@ import java.sql.Time;
 import java.util.Optional;
 
 import static com.booking.shows.respository.Constants.TOTAL_NO_OF_SEATS;
+import static com.booking.users.Role.Code.CUSTOMER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -31,40 +37,65 @@ public class BookingServiceTest {
     private BookingService bookingService;
     private Date bookingDate;
     private Show show;
+    private User user;
     private Customer customer;
+    private UserDetail userDetail;
     private CustomerRepository customerRepository;
     private ShowRepository showRepository;
+    private UserRepository userRepository;
+    private UserDetailsRepository userDetailsRepository;
 
     @BeforeEach
     public void beforeEach() {
         bookingRepository = mock(BookingRepository.class);
         customerRepository = mock(CustomerRepository.class);
         showRepository = mock(ShowRepository.class);
+        userRepository = mock(UserRepository.class);
+        userDetailsRepository = mock(UserDetailsRepository.class);
         bookingDate = Date.valueOf("2020-06-01");
         Slot slot = new Slot("13:00-16:00", Time.valueOf("13:00:00"), Time.valueOf("16:00:00"));
         show = new Show(bookingDate, slot, BigDecimal.valueOf(250), "1");
         customer = new Customer("Customer name", "9090909090");
-        bookingService = new BookingService(bookingRepository, customerRepository, showRepository);
+        user = new User(1L,"testUser","foobar", CUSTOMER);
+        userDetail = new UserDetail("John",Date.valueOf("2022-04-08"),"abc@gmail.com","9843890977",user);
+        bookingService = new BookingService(bookingRepository, customerRepository,userRepository, showRepository, userDetailsRepository);
     }
 
     @Test
-    public void should_save_booking() throws NoSeatAvailableException, PatternDoesNotMatchException {
+    public void should_save_booking_for_walkIn_customer() throws NoSeatAvailableException, PatternDoesNotMatchException {
         int noOfSeats = 2;
         Booking booking = new Booking(bookingDate, show, customer, noOfSeats, BigDecimal.valueOf(500));
         when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.of(show));
         Booking mockBooking = mock(Booking.class);
         when(bookingRepository.save(booking)).thenReturn(mockBooking);
 
-        Booking actualBooking = bookingService.book(customer, TEST_SHOW_ID, bookingDate, noOfSeats);
+        Booking actualBooking = bookingService.bookWalkInCustomer(customer, TEST_SHOW_ID, bookingDate, noOfSeats);
 
         verify(bookingRepository).save(booking);
         assertThat(actualBooking, is(equalTo(mockBooking)));
     }
 
     @Test
-    public void should_save_customer_who_requests_booking() throws NoSeatAvailableException, PatternDoesNotMatchException {
+    public void should_save_booking_for_user_customer() throws NoSeatAvailableException, PatternDoesNotMatchException {
+        int noOfSeats = 2;
+        Booking booking = new Booking(bookingDate, show, user, noOfSeats, BigDecimal.valueOf(500));
         when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.of(show));
-        bookingService.book(customer, TEST_SHOW_ID, bookingDate, 2);
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userDetailsRepository.findByUserId(user.getId())).thenReturn(Optional.of(userDetail));
+        Booking mockBooking = mock(Booking.class);
+        when(bookingRepository.save(booking)).thenReturn(mockBooking);
+
+        Booking actualBooking = bookingService.bookUserCustomer(user.getUsername(), TEST_SHOW_ID, bookingDate, noOfSeats);
+
+        verify(bookingRepository).save(booking);
+        assertThat(actualBooking, is(equalTo(mockBooking)));
+
+    }
+
+    @Test
+    public void should_save_walkIn_customer_who_requests_booking() throws NoSeatAvailableException, PatternDoesNotMatchException {
+        when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.of(show));
+        bookingService.bookWalkInCustomer(customer, TEST_SHOW_ID, bookingDate, 2);
 
         verify(customerRepository).save(customer);
     }
@@ -73,7 +104,7 @@ public class BookingServiceTest {
     public void should_not_book_seat_when_seats_are_not_available() {
         when(bookingRepository.bookedSeatsByShow(show.getId())).thenReturn(TOTAL_NO_OF_SEATS);
         when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.of(show));
-        assertThrows(NoSeatAvailableException.class, () -> bookingService.book(customer, TEST_SHOW_ID, bookingDate, 2));
+        assertThrows(NoSeatAvailableException.class, () -> bookingService.bookWalkInCustomer(customer, TEST_SHOW_ID, bookingDate, 2));
         verifyNoInteractions(customerRepository);
         verify(bookingRepository, never()).save(any(Booking.class));
     }
@@ -83,7 +114,7 @@ public class BookingServiceTest {
         when(showRepository.findById(TEST_SHOW_ID)).thenReturn(Optional.empty());
         final var emptyResultDataAccessException =
                 assertThrows(EmptyResultDataAccessException.class,
-                        () -> bookingService.book(customer, TEST_SHOW_ID, bookingDate, 2));
+                        () -> bookingService.bookWalkInCustomer(customer, TEST_SHOW_ID, bookingDate, 2));
 
         assertThat(emptyResultDataAccessException.getMessage(), is(equalTo("Show not found")));
         assertThat(emptyResultDataAccessException.getExpectedSize(), is(equalTo(1)));

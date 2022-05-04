@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +26,22 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/walkInCustomer")
+    @ApiOperation(value = "Create a booking for walk in customer")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created a booking successfully"),
+            @ApiResponse(code = 404, message = "Record not found", response = ErrorResponse.class),
+            @ApiResponse(code = 400, message = "Server cannot process request due to client error", response = ErrorResponse.class),
+            @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
+    })
+
+    public BookingConfirmationResponse bookWalkInCustomer(@Valid @RequestBody BookingRequest bookingRequest) throws NoSeatAvailableException, PatternDoesNotMatchException {
+        Booking booking = bookingService.bookWalkInCustomer(bookingRequest.getCustomer(), bookingRequest.getShowId(), bookingRequest.getDate(), bookingRequest.getNoOfSeats());
+        return booking.constructBookingConfirmation();
+    }
+
+    @PostMapping("/userCustomer")
     @ApiOperation(value = "Create a booking")
     @ResponseStatus(code = HttpStatus.CREATED)
     @ApiResponses(value = {
@@ -36,8 +50,14 @@ public class BookingController {
             @ApiResponse(code = 400, message = "Server cannot process request due to client error", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "Something failed in the server", response = ErrorResponse.class)
     })
-    public BookingConfirmationResponse book(@Valid @RequestBody BookingRequest bookingRequest) throws NoSeatAvailableException, PatternDoesNotMatchException {
-        Booking booking = bookingService.book(bookingRequest.getCustomer(), bookingRequest.getShowId(), bookingRequest.getDate(), bookingRequest.getNoOfSeats());
+
+    public BookingConfirmationResponse bookUserCustomer(@Valid @RequestBody BookingRequest bookingRequest) throws NoSeatAvailableException, PatternDoesNotMatchException {
+        Booking booking = bookingService.bookUserCustomer(bookingRequest.getUsername(), bookingRequest.getShowId(), bookingRequest.getDate(), bookingRequest.getNoOfSeats());
         return booking.constructBookingConfirmation();
     }
+
+
+
+
+
 }

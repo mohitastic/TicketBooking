@@ -78,7 +78,6 @@ public class BookingTest {
 
         assertTrue(messages.containsAll(Arrays
                 .asList("No of seats must be provided",
-                        "Customer must be provided",
                         "Amount paid must be provided",
                         "Date must be provided",
                         "Show must be provided")));
