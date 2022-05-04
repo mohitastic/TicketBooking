@@ -1,6 +1,8 @@
 package com.booking.config;
 
 import com.booking.toggles.Features;
+import com.booking.users.UserPrincipal;
+import com.booking.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,13 +17,15 @@ import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
 
 import javax.sql.DataSource;
-import java.nio.file.attribute.UserPrincipal;
 
 @Configuration
 public class FeatureToggleConfig implements TogglzConfig {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    UserService userService;
 
     @Bean
     @Override
@@ -43,15 +47,15 @@ public class FeatureToggleConfig implements TogglzConfig {
             public FeatureUser getCurrentUser() {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String userName = getUserName(authentication);
-
-                return new SimpleFeatureUser(userName, true);
+                boolean isAdmin = userService.fetchRole(userName).equals("ADMIN");
+                return new SimpleFeatureUser(userName, isAdmin);
             }
 
-            protected String getUserName(Authentication authentication) {
+            private String getUserName(Authentication authentication) {
                 Object principal = authentication.getPrincipal();
                 if (principal instanceof UserPrincipal) {
                     UserPrincipal userPrincipal = (UserPrincipal) principal;
-                    return userPrincipal.getName();
+                    return userPrincipal.getUsername();
                 }
                 return principal.toString();
             }
