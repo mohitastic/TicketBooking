@@ -5,6 +5,8 @@ import com.booking.bookings.repository.Booking;
 import com.booking.exceptions.NoSeatAvailableException;
 import com.booking.exceptions.PatternDoesNotMatchException;
 import com.booking.handlers.models.ErrorResponse;
+import com.booking.toggles.FeatureAssociation;
+import com.booking.toggles.Features;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -46,6 +48,7 @@ public class BookingController {
         return booking.constructBookingConfirmation();
     }
 
+    @FeatureAssociation(value= Features.CUSTOMER_BOOKING)
     @Secured("ROLE_" + CUSTOMER)
     @PostMapping("/userCustomer")
     @ApiOperation(value = "Create a booking")

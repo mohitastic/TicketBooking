@@ -13,7 +13,10 @@ public enum Features implements Feature {
     CHANGE_PASSWORD,
 
     @Label("View user profile Feature")
-    VIEW_USER_PROFILE;
+    VIEW_USER_PROFILE,
+
+    @Label("Customer booking")
+    CUSTOMER_BOOKING;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);

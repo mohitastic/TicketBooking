@@ -15,6 +15,7 @@ import org.togglz.core.repository.jdbc.JDBCStateRepository;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
+import static com.booking.users.Role.Code.ADMIN;
 
 import javax.sql.DataSource;
 
@@ -47,7 +48,7 @@ public class FeatureToggleConfig implements TogglzConfig {
             public FeatureUser getCurrentUser() {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String userName = getUserName(authentication);
-                boolean isAdmin = userService.fetchRole(userName).equals("ADMIN");
+                boolean isAdmin = userService.fetchRole(userName).equals(ADMIN);
                 return new SimpleFeatureUser(userName, isAdmin);
             }
 

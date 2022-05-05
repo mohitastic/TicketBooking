@@ -10,6 +10,7 @@ import com.booking.shows.respository.Show;
 import com.booking.shows.respository.ShowRepository;
 import com.booking.slots.repository.Slot;
 import com.booking.slots.repository.SlotRepository;
+import com.booking.toggles.Features;
 import com.booking.users.Role;
 import com.booking.users.repository.UserDetailsRepository;
 import com.booking.users.repository.UserRepository;
@@ -27,6 +28,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.togglz.junit5.AllDisabled;
+import org.togglz.junit5.AllEnabled;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -154,7 +157,8 @@ public class BookingControllerIntegrationTest {
 
     @WithMockUser(roles = CUSTOMER)
     @Test
-    public void should_save_booking_user_customer() throws Exception {
+    @AllEnabled(Features.class)
+    public void should_save_booking_user_customer_when_is_enabled() throws Exception {
         final String requestJson = "{" +
                 "\"date\": \"2020-06-04\"," +
                 "\"showId\": " + showOne.getId() + "," +
@@ -176,6 +180,22 @@ public class BookingControllerIntegrationTest {
 
 
         assertThat(bookingRepository.findAll().size(), is(1));
+    }
+
+    @Test
+    @AllDisabled(Features.class)
+    public void should_not_save_booking_user_customer_when_feature_is_disabled() throws Exception {
+        final String requestJson = "{" +
+                "\"date\": \"2020-06-04\"," +
+                "\"showId\": " + showOne.getId() + "," +
+                "\"username\": \"testUser2\"," +
+                "\"noOfSeats\": 2" +
+                "}";
+
+        mockMvc.perform(post("/bookings/userCustomer")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                        .content(requestJson))
+                .andExpect(status().isBadRequest());
     }
 
 
