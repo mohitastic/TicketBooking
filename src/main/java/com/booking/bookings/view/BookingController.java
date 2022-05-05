@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static com.booking.users.Role.Code.ADMIN;
+import static com.booking.users.Role.Code.CUSTOMER;
 
 @Api(tags = "Bookings")
 @RestController
@@ -45,6 +46,7 @@ public class BookingController {
         return booking.constructBookingConfirmation();
     }
 
+    @Secured("ROLE_" + CUSTOMER)
     @PostMapping("/userCustomer")
     @ApiOperation(value = "Create a booking")
     @ResponseStatus(code = HttpStatus.CREATED)

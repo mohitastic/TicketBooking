@@ -36,6 +36,7 @@ import java.time.Duration;
 
 import static com.booking.shows.respository.Constants.MAX_NO_OF_SEATS_PER_BOOKING;
 import static com.booking.users.Role.Code.ADMIN;
+import static com.booking.users.Role.Code.CUSTOMER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -94,8 +95,8 @@ public class BookingControllerIntegrationTest {
                         )
                 );
 
-        userRepository.save(new User("testUser1", "Foobar@1", Role.Code.CUSTOMER));
-        userDetailsRepository.save(new UserDetail("John",Date.valueOf("2022-04-08"),"abc@gmail.com","9843890977",new User("testUser2", "foobar", Role.Code.CUSTOMER)));
+        userRepository.save(new User("testUser1", "Foobar@1", CUSTOMER));
+        userDetailsRepository.save(new UserDetail("John",Date.valueOf("2022-04-08"),"abc@gmail.com","9843890977",new User("testUser2", "foobar", CUSTOMER)));
         Slot slotOne = slotRepository.save(new Slot("Test slot", Time.valueOf("09:30:00"), Time.valueOf("12:00:00")));
         showOne = showRepository.save(new Show(Date.valueOf("2020-01-01"), slotOne, new BigDecimal("249.99"), "movie_1"));
     }
@@ -151,7 +152,7 @@ public class BookingControllerIntegrationTest {
                 .andExpect(status().isForbidden());
     }
 
-
+    @WithMockUser(roles = CUSTOMER)
     @Test
     public void should_save_booking_user_customer() throws Exception {
         final String requestJson = "{" +
