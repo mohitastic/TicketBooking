@@ -184,6 +184,7 @@ public class BookingControllerIntegrationTest {
 
     @Test
     @AllDisabled(Features.class)
+    @WithMockUser(roles = CUSTOMER)
     public void should_not_save_booking_user_customer_when_feature_is_disabled() throws Exception {
         final String requestJson = "{" +
                 "\"date\": \"2020-06-04\"," +
